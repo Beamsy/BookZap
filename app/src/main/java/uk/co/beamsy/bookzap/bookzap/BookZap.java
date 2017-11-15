@@ -71,9 +71,10 @@ public class BookZap extends AppCompatActivity {
     private void prepareData(){
         Author a = new Author("Brandon", "Sanderson", 0);
         Book b = new Book("Oathbringer", a, 0);
+        bookList.add(b);
         a = new Author("James", "Corey", 1);
         b = new Book("Leviathan Wakes", a, 0);
-
+        bookList.add(b);
         bookAdaptor.notifyDataSetChanged();
     }
 
