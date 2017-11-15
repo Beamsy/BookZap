@@ -1,12 +1,10 @@
 package uk.co.beamsy.bookzap.bookzap;
 
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.support.v7.widget.CardView;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -32,7 +30,7 @@ public class BookZap extends AppCompatActivity {
         Toolbar bookZapBar = (Toolbar) findViewById(R.id.bookZapBar);
         setSupportActionBar(bookZapBar);
         drawerToggle = new ActionBarDrawerToggle(
-                this, drawerLayout, R.string.drawer_open, R.string.drawerClose
+                this, drawerLayout, R.string.drawer_open, R.string.drawer_close
         ){
             public void onDrawerClosed(View vi){
                 super.onDrawerClosed(vi);
@@ -42,7 +40,7 @@ public class BookZap extends AppCompatActivity {
 
             public void onDrawerOpened(View dVi){
                 super.onDrawerOpened(dVi);
-                getActionBar().setTitle(R.string.bookZapBook);
+                getActionBar().setTitle(R.string.book_zap_book);
                 invalidateOptionsMenu();
             }
         };

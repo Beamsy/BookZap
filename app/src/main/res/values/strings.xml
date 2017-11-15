@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">BookZap</string>
-    <string name="bookZapBook">Book</string>
-    <string name="drawerClose">Drawer Close</string>
+    <string name="book_zap_book">Book</string>
+    <string name="drawer_close">Drawer Close</string>
     <string name="drawer_open">Drawer Open</string>
+    <string name="author_name">Author Name</string>
+    <string name="TODO">TODO</string>
 </resources>
