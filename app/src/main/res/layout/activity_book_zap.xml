@@ -11,6 +11,7 @@
 
 
     <android.widget.FrameLayout
+        android:id="@+id/outer_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         >
@@ -23,13 +24,12 @@
             android:elevation="4dp"
             android:theme="?attr/actionBarTheme" />
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_view"
+        <android.widget.FrameLayout
+            android:id="@+id/inner_frame"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="56dp"
-            android:scrollbars="vertical"
-            tools:listitem="@layout/book_card" />
+            />
     </android.widget.FrameLayout>
 
     <ListView
