@@ -1,5 +1,6 @@
 package uk.co.beamsy.bookzap.bookzap;
 
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -14,6 +15,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import uk.co.beamsy.bookzap.bookzap.model.Author;
+import uk.co.beamsy.bookzap.bookzap.model.Book;
+import uk.co.beamsy.bookzap.bookzap.ui.MainFragment;
+
 public class BookZap extends AppCompatActivity {
     private static String[] bookTitles = {"Leviathan's Wake", "Abbadon's Gate", "Absolution Gap"};
     private DrawerLayout drawerLayout;
@@ -21,6 +26,7 @@ public class BookZap extends AppCompatActivity {
     private ActionBarDrawerToggle drawerToggle;
     private MainFragment mainFragment;
 
+    public static final int PERMISSION_REQUEST_CAMERA = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,8 +63,8 @@ public class BookZap extends AppCompatActivity {
         mainFragment = new MainFragment();
         prepareData();
 
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.inner_frame, mainFragment).commit();
+        changeFragment(mainFragment);
+
 
         drawerToggle.syncState();
 
@@ -109,6 +115,11 @@ public class BookZap extends AppCompatActivity {
         public void onItemClick(AdapterView<?> parent, View vi, int pos, long id) {
             selectItem(pos);
         }
+    }
+
+    private void changeFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.inner_frame, fragment).commit();
     }
 
 }

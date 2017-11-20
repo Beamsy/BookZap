@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="PERMISSION_REQUEST_CAMERA">100</integer>
+    <integer name="ANIM_DEFAULT_LENGTH">500</integer>
+</resources>

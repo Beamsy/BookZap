@@ -1,4 +1,4 @@
-package uk.co.beamsy.bookzap.bookzap;
+package uk.co.beamsy.bookzap.bookzap.model;
 
 /**
  * Created by jake on 15/11/17.

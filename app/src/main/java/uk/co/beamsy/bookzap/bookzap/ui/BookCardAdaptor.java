@@ -1,4 +1,4 @@
-package uk.co.beamsy.bookzap.bookzap;
+package uk.co.beamsy.bookzap.bookzap.ui;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -8,6 +8,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.List;
+
+import uk.co.beamsy.bookzap.bookzap.model.Book;
+import uk.co.beamsy.bookzap.bookzap.R;
 
 /**
  * Created by jake on 15/11/17.
