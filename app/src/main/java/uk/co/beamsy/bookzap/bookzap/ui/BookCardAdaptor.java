@@ -1,10 +1,13 @@
 package uk.co.beamsy.bookzap.bookzap.ui;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -24,10 +27,12 @@ public class BookCardAdaptor extends RecyclerView.Adapter<BookCardAdaptor.Recycl
 
     public class RecyclerCardViewHolder extends RecyclerView.ViewHolder{
         public TextView bookTitle, authorName;
+        public ImageView bookCover;
         public RecyclerCardViewHolder(View vi){
             super(vi);
             this.bookTitle = (TextView)vi.findViewById(R.id.book_title);
             this.authorName = (TextView)vi.findViewById(R.id.author_name);
+            this.bookCover = (ImageView)vi.findViewById(R.id.book_cover);
         }
     }
 
@@ -45,6 +50,7 @@ public class BookCardAdaptor extends RecyclerView.Adapter<BookCardAdaptor.Recycl
         Book book = bookList.get(position);
         holder.bookTitle.setText(book.getTitle());
         holder.authorName.setText(book.getAuthor().getName());
+        holder.bookCover.setImageBitmap(BitmapFactory.decodeResource(holder.bookTitle.getContext().getResources(), book.getCoverId()));
     }
 
     @Override

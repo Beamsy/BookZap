@@ -23,25 +23,25 @@ import uk.co.beamsy.bookzap.bookzap.R;
  * Created by Jake on 19/11/2017.
  */
 
-public class MainFragment extends Fragment {
+public class LibraryFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private BookCardAdaptor bookAdaptor;
     private List<Book> bookList;
     private boolean isFabMenuOpen = false;
 
-    public MainFragment(){
+    public LibraryFragment(){
         bookList = new ArrayList<>();
         bookAdaptor = new BookCardAdaptor(this.getContext(), bookList);
-        Log.d("MainFragment Constructor:", "Fragment Constructed");
+        Log.d("LibraryFragment Constructor:", "Fragment Constructed");
     }
 
 
     @Override
     public View onCreateView(LayoutInflater inflator, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.d("MainFragment onCreateView", "Entry");
-        View rootView = inflator.inflate(R.layout.fragment_main, container, false);
+        Log.d("LibraryFragment onCreateView", "Entry");
+        View rootView = inflator.inflate(R.layout.fragment_library, container, false);
         recyclerView = (RecyclerView)rootView.findViewById(R.id.recycler_view);
 
         RecyclerView.LayoutManager _layoutManager = new GridLayoutManager(this.getContext(), 1);
@@ -59,12 +59,13 @@ public class MainFragment extends Fragment {
                 }
             }
         });
-        Log.d("MainFragment onCreateView", "Exit");
+        Log.d("LibraryFragment onCreateView", "Exit");
+        getActivity().setTitle("Library");
         return rootView;
     }
 
     public void addCard(Book b) {
-        Log.d("MainFragment addCard", "entry");
+        Log.d("LibraryFragment addCard", "entry");
         bookList.add(b);
         bookAdaptor.notifyDataSetChanged();
     }

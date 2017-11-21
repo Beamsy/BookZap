@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1018192988479",
+    "firebase_url": "https://bookzap-app.firebaseio.com",
+    "project_id": "bookzap-app",
+    "storage_bucket": "bookzap-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1018192988479:android:b28beee0ae689b5d",
+        "android_client_info": {
+          "package_name": "uk.co.beamsy.bookzap.bookzap"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1018192988479-39hqa733ti5df0ehg06sel0mf8cm1t8i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "uk.co.beamsy.bookzap.bookzap",
+            "certificate_hash": "d0ee797e268c0b5f2031b9b482e3dc1907378e16"
+          }
+        },
+        {
+          "client_id": "1018192988479-pesp386h9jnnp51uub49u60f1pojf8g3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD7b2x_hnskLJwiMbszmxeEOGtpAAq_jC0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1018192988479-pesp386h9jnnp51uub49u60f1pojf8g3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

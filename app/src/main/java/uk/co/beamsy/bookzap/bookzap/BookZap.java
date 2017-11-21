@@ -17,14 +17,14 @@ import android.widget.Toast;
 
 import uk.co.beamsy.bookzap.bookzap.model.Author;
 import uk.co.beamsy.bookzap.bookzap.model.Book;
-import uk.co.beamsy.bookzap.bookzap.ui.MainFragment;
+import uk.co.beamsy.bookzap.bookzap.ui.LibraryFragment;
 
 public class BookZap extends AppCompatActivity {
     private static String[] bookTitles = {"Leviathan's Wake", "Abbadon's Gate", "Absolution Gap"};
     private DrawerLayout drawerLayout;
     private ListView drawerList;
     private ActionBarDrawerToggle drawerToggle;
-    private MainFragment mainFragment;
+    private LibraryFragment libraryFragment;
 
     public static final int PERMISSION_REQUEST_CAMERA = 100;
 
@@ -60,10 +60,10 @@ public class BookZap extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-        mainFragment = new MainFragment();
+        libraryFragment = new LibraryFragment();
         prepareData();
 
-        changeFragment(mainFragment);
+        changeFragment(libraryFragment);
 
 
         drawerToggle.syncState();
@@ -73,17 +73,16 @@ public class BookZap extends AppCompatActivity {
 
     private void prepareData(){
         Author a = new Author("Brandon", "Sanderson", 0);
-        Book b = new Book("Oathbringer", a, 0);
-        mainFragment.addCard(b);
+        Book b = new Book("Oathbringer", a, 0, R.drawable.oath);
+        libraryFragment.addCard(b);
         a = new Author("James", "Corey", 1);
-        b = new Book("Leviathan Wakes", a, 0);
-        mainFragment.addCard(b);
+        b = new Book("Leviathan Wakes", a, 0, R.drawable.lev);
+        libraryFragment.addCard(b);
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         boolean isOpen = drawerLayout.isDrawerOpen(drawerList);
-        //menu.findItem(R.id.)
         return super.onPrepareOptionsMenu(menu);
     }
 
