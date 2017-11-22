@@ -1,8 +1,11 @@
 package uk.co.beamsy.bookzap.bookzap.ui;
 
+import android.Manifest;
 import android.app.Fragment;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -69,8 +72,15 @@ public class LibraryFragment extends Fragment {
             public void onClick(View vi) {
                 if(isFabMenuOpen) {
                     BookZap mainActivity = (BookZap) getActivity();
-                    mainActivity.changeFragment(new ScannerFragment(), "scanner");
-                    isFabMenuOpen = false;
+                    if (ActivityCompat.checkSelfPermission(rootView.getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(
+                                getActivity(),
+                                new String[]{Manifest.permission.CAMERA},
+                                rootView.getContext().getResources().getInteger(R.integer.PERMISSION_REQUEST_CAMERA));
+                    } else {
+                        mainActivity.changeFragment(new ScannerFragment(), "scanner");
+                        isFabMenuOpen = false;
+                    }
                 }
             }
         });

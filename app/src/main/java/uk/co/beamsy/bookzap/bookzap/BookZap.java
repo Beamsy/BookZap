@@ -16,9 +16,13 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import uk.co.beamsy.bookzap.bookzap.model.Author;
 import uk.co.beamsy.bookzap.bookzap.model.Book;
 import uk.co.beamsy.bookzap.bookzap.ui.LibraryFragment;
+import uk.co.beamsy.bookzap.bookzap.ui.LoginFragment;
 
 public class BookZap extends AppCompatActivity {
     private static String[] bookTitles = {"Leviathan's Wake", "Abbadon's Gate", "Absolution Gap"};
@@ -26,8 +30,17 @@ public class BookZap extends AppCompatActivity {
     private ListView drawerList;
     private ActionBarDrawerToggle drawerToggle;
     private LibraryFragment libraryFragment;
+    private FirebaseAuth auth;
+    private FirebaseUser currentUser;
 
     public static final int PERMISSION_REQUEST_CAMERA = 100;
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        currentUser = auth.getCurrentUser();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +57,7 @@ public class BookZap extends AppCompatActivity {
 
         Toolbar bookZapBar = (Toolbar) findViewById(R.id.bookZapBar);
         setSupportActionBar(bookZapBar);
-
+        auth = FirebaseAuth.getInstance();
         drawerToggle = new ActionBarDrawerToggle(
                 this, drawerLayout, bookZapBar, R.string.drawer_open, R.string.drawer_close
         ){
@@ -58,10 +71,15 @@ public class BookZap extends AppCompatActivity {
         };
         drawerLayout.addDrawerListener(drawerToggle);
 
-        libraryFragment = new LibraryFragment();
-        prepareData();
-        changeFragment(libraryFragment, "library");
+        if (currentUser != null) {
+            libraryFragment = new LibraryFragment();
+            prepareData();
+            changeFragment(libraryFragment, "library");
+        } else {
+            LoginFragment loginFragment = new LoginFragment();
+            getFragmentManager().beginTransaction().replace(R.id.inner_frame, loginFragment).commit();
 
+        }
 
 
         drawerToggle.syncState();
@@ -131,7 +149,11 @@ public class BookZap extends AppCompatActivity {
 
     public void changeFragment(Fragment fragment, String tag) {
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.inner_frame, fragment).addToBackStack(null).commit();
+        if(!tag.equals("library")) {
+            fragmentManager.beginTransaction().replace(R.id.inner_frame, fragment).addToBackStack(null).commit();
+        } else {
+            fragmentManager.beginTransaction().replace(R.id.inner_frame, fragment).commit();
+        }
     }
 
     public void changeDrawerToBack() {
