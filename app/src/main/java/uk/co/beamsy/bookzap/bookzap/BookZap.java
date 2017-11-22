@@ -9,6 +9,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -39,7 +40,7 @@ public class BookZap extends AppCompatActivity {
         drawerList.setAdapter(new ArrayAdapter<String>(
                 this, R.layout.drawer_list_item, bookTitles
         ));
-        drawerList.setOnItemClickListener(new DrawerItemClickListeneder());
+        drawerList.setOnItemClickListener(new DrawerItemClickListeneer());
 
         Toolbar bookZapBar = (Toolbar) findViewById(R.id.bookZapBar);
         setSupportActionBar(bookZapBar);
@@ -57,13 +58,10 @@ public class BookZap extends AppCompatActivity {
         };
         drawerLayout.addDrawerListener(drawerToggle);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-
         libraryFragment = new LibraryFragment();
         prepareData();
+        changeFragment(libraryFragment, "library");
 
-        changeFragment(libraryFragment);
 
 
         drawerToggle.syncState();
@@ -104,23 +102,43 @@ public class BookZap extends AppCompatActivity {
         drawerToggle.onConfigurationChanged(newConfig);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                Toast.makeText(this, "case", Toast.LENGTH_SHORT);
+                if(!getFragmentManager().findFragmentByTag("library").isVisible()) {
+                    getFragmentManager().popBackStack();
+                    Toast.makeText(this, "if", Toast.LENGTH_SHORT);
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
+    }
 
     private void selectItem(int position) {
         Toast.makeText(this, bookTitles[position], Toast.LENGTH_LONG).show();
     }
 
-    private class DrawerItemClickListeneder implements ListView.OnItemClickListener {
+    private class DrawerItemClickListeneer implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View vi, int pos, long id) {
             selectItem(pos);
         }
     }
 
-    private void changeFragment(Fragment fragment) {
+    public void changeFragment(Fragment fragment, String tag) {
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.inner_frame, fragment).commit();
+        fragmentManager.beginTransaction().replace(R.id.inner_frame, fragment).addToBackStack(null).commit();
     }
 
+    public void changeDrawerToBack() {
+        drawerToggle.setDrawerIndicatorEnabled(false);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
 }
 
 

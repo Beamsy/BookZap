@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import java.util.ArrayList;
 import java.util.List;
 
+import uk.co.beamsy.bookzap.bookzap.BookZap;
 import uk.co.beamsy.bookzap.bookzap.model.Book;
 import uk.co.beamsy.bookzap.bookzap.R;
 
@@ -36,12 +37,15 @@ public class LibraryFragment extends Fragment {
         Log.d("LibraryFragment Constructor:", "Fragment Constructed");
     }
 
+    public static LibraryFragment getInstance(){
+        return new LibraryFragment();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflator, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.d("LibraryFragment onCreateView", "Entry");
-        View rootView = inflator.inflate(R.layout.fragment_library, container, false);
+        final View rootView = inflator.inflate(R.layout.fragment_library, container, false);
         recyclerView = (RecyclerView)rootView.findViewById(R.id.recycler_view);
 
         RecyclerView.LayoutManager _layoutManager = new GridLayoutManager(this.getContext(), 1);
@@ -56,6 +60,28 @@ public class LibraryFragment extends Fragment {
                     showMenu();
                 }else{
                     closeMenu();
+                }
+            }
+        });
+        FloatingActionButton addScan = (FloatingActionButton)rootView.findViewById(R.id.fab_scan);
+        addScan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View vi) {
+                if(isFabMenuOpen) {
+                    BookZap mainActivity = (BookZap) getActivity();
+                    mainActivity.changeFragment(new ScannerFragment(), "scanner");
+                    isFabMenuOpen = false;
+                }
+            }
+        });
+        FloatingActionButton addManually = (FloatingActionButton)rootView.findViewById((R.id.fab_add));
+        addManually.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View vi) {
+                if(isFabMenuOpen) {
+                    BookZap mainActivity = (BookZap) getActivity();
+                    mainActivity.changeFragment(new LoginFragment(), "login");
+                    isFabMenuOpen = false;
                 }
             }
         });

@@ -35,10 +35,14 @@ public class ScannerFragment extends Fragment {
 
     }
 
+    public static ScannerFragment getInstance() {
+        return new ScannerFragment();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflator, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflator.inflate(R.layout.fragment_scanner, container, false);
+        getActivity().setTitle("Scan a barcode");
         cameraView = (SurfaceView) rootView.findViewById(R.id.camera_view);
         barcodeInfo = (TextView) rootView.findViewById(R.id.barcode_info);
         if (ActivityCompat.checkSelfPermission(rootView.getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
@@ -54,15 +58,16 @@ public class ScannerFragment extends Fragment {
         final CameraSource cameraSource = new CameraSource
                 .Builder(rootView.getContext(), barcodeDetector)
                 .setAutoFocusEnabled(true)
-                .setRequestedPreviewSize(cameraView.getWidth(), cameraView.getHeight())
+                .setRequestedPreviewSize(250, 250)
                 .build();
 
         cameraView.getHolder().addCallback(new SurfaceHolder.Callback() {
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
                 try {
-
-                    cameraSource.start(cameraView.getHolder());
+                    if(getActivity().checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                        cameraSource.start(cameraView.getHolder());
+                    }
                 } catch (IOException ie) {
                     Log.e("CAMERA SOURCE", ie.getMessage());
                 }
@@ -85,6 +90,8 @@ public class ScannerFragment extends Fragment {
 
         return rootView;
     }
+
+
 
 
 }
