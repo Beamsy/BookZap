@@ -8,6 +8,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,6 +24,7 @@ import uk.co.beamsy.bookzap.bookzap.model.Author;
 import uk.co.beamsy.bookzap.bookzap.model.Book;
 import uk.co.beamsy.bookzap.bookzap.ui.LibraryFragment;
 import uk.co.beamsy.bookzap.bookzap.ui.LoginFragment;
+
 
 public class BookZap extends AppCompatActivity {
     private static String[] bookTitles = {"Leviathan's Wake", "Abbadon's Gate", "Absolution Gap"};
@@ -53,11 +55,12 @@ public class BookZap extends AppCompatActivity {
         drawerList.setAdapter(new ArrayAdapter<String>(
                 this, R.layout.drawer_list_item, bookTitles
         ));
-        drawerList.setOnItemClickListener(new DrawerItemClickListeneer());
+        drawerList.setOnItemClickListener(new DrawerItemClickListener());
 
         Toolbar bookZapBar = (Toolbar) findViewById(R.id.bookZapBar);
         setSupportActionBar(bookZapBar);
         auth = FirebaseAuth.getInstance();
+        currentUser = auth.getCurrentUser();
         drawerToggle = new ActionBarDrawerToggle(
                 this, drawerLayout, bookZapBar, R.string.drawer_open, R.string.drawer_close
         ){
@@ -69,18 +72,27 @@ public class BookZap extends AppCompatActivity {
                 invalidateOptionsMenu();
             }
         };
-        drawerLayout.addDrawerListener(drawerToggle);
-
+        libraryFragment = new LibraryFragment();
+        prepareData();
         if (currentUser != null) {
-            libraryFragment = new LibraryFragment();
-            prepareData();
             changeFragment(libraryFragment, "library");
         } else {
             LoginFragment loginFragment = new LoginFragment();
             getFragmentManager().beginTransaction().replace(R.id.inner_frame, loginFragment).commit();
 
         }
-
+        drawerToggle.setToolbarNavigationClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(), "case", Toast.LENGTH_SHORT);
+                FragmentManager fragmentManager = getFragmentManager();
+                if(!fragmentManager.findFragmentByTag("library").isInLayout()) {
+                    fragmentManager.popBackStack();
+                    Toast.makeText(getApplicationContext(), "if", Toast.LENGTH_SHORT);
+                }
+            }
+        });
+        drawerLayout.addDrawerListener(drawerToggle);
 
         drawerToggle.syncState();
 
@@ -120,12 +132,16 @@ public class BookZap extends AppCompatActivity {
         drawerToggle.onConfigurationChanged(newConfig);
     }
 
+
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Log.d("onOIS", "outside switch");
         switch (item.getItemId()) {
             case android.R.id.home:
+                Log.d("onOIS", "case home");
                 Toast.makeText(this, "case", Toast.LENGTH_SHORT);
-                if(!getFragmentManager().findFragmentByTag("library").isVisible()) {
+                if(!getFragmentManager().findFragmentByTag("library").isInLayout()) {
                     getFragmentManager().popBackStack();
                     Toast.makeText(this, "if", Toast.LENGTH_SHORT);
                 }
@@ -140,14 +156,14 @@ public class BookZap extends AppCompatActivity {
         Toast.makeText(this, bookTitles[position], Toast.LENGTH_LONG).show();
     }
 
-    private class DrawerItemClickListeneer implements ListView.OnItemClickListener {
+    private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View vi, int pos, long id) {
             selectItem(pos);
         }
     }
 
-    public void changeFragment(Fragment fragment, String tag) {
+    private void addFragment(Fragment fragment, String tag) {
         FragmentManager fragmentManager = getFragmentManager();
         if(!tag.equals("library")) {
             fragmentManager.beginTransaction().replace(R.id.inner_frame, fragment).addToBackStack(null).commit();
@@ -156,10 +172,42 @@ public class BookZap extends AppCompatActivity {
         }
     }
 
-    public void changeDrawerToBack() {
-        drawerToggle.setDrawerIndicatorEnabled(false);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    public void changeFragment(Fragment fragment, String tag) {
+        FragmentManager fragmentManager = getFragmentManager();
+        if(!tag.equals("library")) {
+            fragmentManager.beginTransaction().replace(R.id.inner_frame, fragment, tag).addToBackStack(null).commit();
+        } else {
+            fragmentManager.beginTransaction().replace(R.id.inner_frame, fragment, tag).commit();
+        }
+    }
+
+    public void changeDrawerBack(boolean direction) {
+        if (direction) {
+            drawerToggle.setDrawerIndicatorEnabled(!direction);
+            getSupportActionBar().setHomeButtonEnabled(direction);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(direction);
+        } else {
+            getSupportActionBar().setHomeButtonEnabled(direction);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(direction);
+            drawerToggle.setDrawerIndicatorEnabled(!direction);
+        }
+    }
+
+
+    public FirebaseAuth getAuthObject() {
+        return auth;
+    }
+
+    public FirebaseUser getCurrentUser() {
+        return currentUser;
+    }
+
+    public void setCurrentUser(FirebaseUser mUser) {
+        currentUser = mUser;
+    }
+
+    public void postLogin() {
+        changeFragment(libraryFragment, "library");
     }
 }
 

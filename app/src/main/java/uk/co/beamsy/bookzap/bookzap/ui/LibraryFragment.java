@@ -96,7 +96,9 @@ public class LibraryFragment extends Fragment {
             }
         });
         Log.d("LibraryFragment onCreateView", "Exit");
-        getActivity().setTitle("Library");
+        BookZap mainActivity = (BookZap) getActivity();
+        mainActivity.changeDrawerBack(false);
+        mainActivity.setTitle("Library");
         return rootView;
     }
 
