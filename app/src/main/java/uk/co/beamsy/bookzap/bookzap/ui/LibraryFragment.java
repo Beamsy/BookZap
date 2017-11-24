@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Fragment;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -35,13 +36,24 @@ public class LibraryFragment extends Fragment {
     private boolean isFabMenuOpen = false;
 
     public LibraryFragment(){
-        bookList = new ArrayList<>();
-        bookAdaptor = new BookCardAdaptor(this.getContext(), bookList);
-        Log.d("LibraryFragment Constructor:", "Fragment Constructed");
+
     }
 
     public static LibraryFragment getInstance(){
-        return new LibraryFragment();
+        LibraryFragment libraryFragment = new LibraryFragment();
+        libraryFragment.init();
+        return libraryFragment;
+    }
+
+    private void init() {
+        bookList = new ArrayList<>();
+        bookAdaptor = new BookCardAdaptor(this.getContext(), bookList);
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+
+        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -78,7 +90,7 @@ public class LibraryFragment extends Fragment {
                                 new String[]{Manifest.permission.CAMERA},
                                 rootView.getContext().getResources().getInteger(R.integer.PERMISSION_REQUEST_CAMERA));
                     } else {
-                        mainActivity.changeFragment(new ScannerFragment(), "scanner");
+                        mainActivity.changeFragment(ScannerFragment.getInstance(), "scanner");
                         isFabMenuOpen = false;
                     }
                 }
@@ -90,7 +102,7 @@ public class LibraryFragment extends Fragment {
             public void onClick(View vi) {
                 if(isFabMenuOpen) {
                     BookZap mainActivity = (BookZap) getActivity();
-                    mainActivity.changeFragment(new LoginFragment(), "login");
+                    mainActivity.changeFragment(LoginFragment.getInstance(), "login");
                     isFabMenuOpen = false;
                 }
             }

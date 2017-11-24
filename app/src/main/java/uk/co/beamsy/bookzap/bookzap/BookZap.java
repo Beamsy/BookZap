@@ -72,12 +72,12 @@ public class BookZap extends AppCompatActivity {
                 invalidateOptionsMenu();
             }
         };
-        libraryFragment = new LibraryFragment();
+        libraryFragment = LibraryFragment.getInstance();
         prepareData();
         if (currentUser != null) {
             changeFragment(libraryFragment, "library");
         } else {
-            LoginFragment loginFragment = new LoginFragment();
+            LoginFragment loginFragment = LoginFragment.getInstance();
             getFragmentManager().beginTransaction().replace(R.id.inner_frame, loginFragment).commit();
 
         }
