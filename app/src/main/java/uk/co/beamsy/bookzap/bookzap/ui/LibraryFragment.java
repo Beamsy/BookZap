@@ -12,6 +12,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
@@ -105,10 +106,28 @@ public class LibraryFragment extends Fragment {
                 }
             }
         });
+        //TODO: Implement OnItemTouchLogic
+        recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+            @Override
+            public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
+                return false;
+            }
+
+            @Override
+            public void onTouchEvent(RecyclerView rv, MotionEvent e) {
+
+            }
+
+            @Override
+            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+
+            }
+        });
         Log.d("LibraryFragment onCreateView", "Exit");
         BookZap mainActivity = (BookZap) getActivity();
         mainActivity.changeDrawerBack(false);
         mainActivity.setTitle("Library");
+        setBookList(mainActivity.getBookList());
         return rootView;
     }
 
@@ -130,5 +149,10 @@ public class LibraryFragment extends Fragment {
         LinearLayout containerLayout = (LinearLayout)this.getActivity().findViewById(R.id.add_menu_layout);
         containerLayout.setVisibility(View.GONE);
         containerLayout.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.fade_slide_out));
+    }
+
+    public void setBookList(List<Book> _bookList) {
+        this.bookList.addAll(_bookList);
+        bookAdaptor.notifyDataSetChanged();
     }
 }

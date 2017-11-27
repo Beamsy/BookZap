@@ -42,7 +42,9 @@ public class ScannerFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflator, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflator.inflate(R.layout.fragment_scanner, container, false);
-        getActivity().setTitle("Scan a barcode");
+        BookZap mainActivity = (BookZap) getActivity();
+        mainActivity.setTitle("Scan a barcode");
+        mainActivity.changeDrawerBack(true);
         cameraView = (SurfaceView) rootView.findViewById(R.id.camera_view);
         barcodeInfo = (TextView) rootView.findViewById(R.id.barcode_info);
 

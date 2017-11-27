@@ -19,7 +19,7 @@ import uk.co.beamsy.bookzap.bookzap.BookZap;
 import uk.co.beamsy.bookzap.bookzap.R;
 
 
-public class LoginFragment extends BaseFragment {
+public class LoginFragment extends Fragment {
 
     private boolean isInCreate = false;
     public LoginFragment() {

@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -22,10 +23,14 @@ import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import uk.co.beamsy.bookzap.bookzap.model.Author;
 import uk.co.beamsy.bookzap.bookzap.model.Book;
 import uk.co.beamsy.bookzap.bookzap.ui.LibraryFragment;
 import uk.co.beamsy.bookzap.bookzap.ui.LoginFragment;
+import uk.co.beamsy.bookzap.bookzap.ui.ReadingListFragment;
 
 
 public class BookZap extends AppCompatActivity {
@@ -37,6 +42,7 @@ public class BookZap extends AppCompatActivity {
     private FirebaseAuth auth;
     private FirebaseUser currentUser;
     private TextView logoutText;
+    private List<Book> bookList = new ArrayList<>();
 
     public static final int PERMISSION_REQUEST_CAMERA = 100;
 
@@ -51,7 +57,7 @@ public class BookZap extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_zap);
-
+        prepareData();
         drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         drawerNav = (NavigationView)findViewById(R.id.nav_view);
         logoutText = (TextView) drawerNav.getHeaderView(0).findViewById(R.id.log_out);
@@ -64,6 +70,7 @@ public class BookZap extends AppCompatActivity {
             }
         });
         TextView userText = (TextView)  drawerNav.getHeaderView(0).findViewById(R.id.user_greet);
+
         Toolbar bookZapBar = (Toolbar) findViewById(R.id.bookZapBar);
         setSupportActionBar(bookZapBar);
         auth = FirebaseAuth.getInstance();
@@ -80,7 +87,7 @@ public class BookZap extends AppCompatActivity {
             }
         };
         libraryFragment = LibraryFragment.getInstance();
-        prepareData();
+
         if (currentUser != null) {
             changeFragment(libraryFragment, "library");
             if (currentUser.getDisplayName() != null) {
@@ -102,6 +109,26 @@ public class BookZap extends AppCompatActivity {
         });
         drawerLayout.addDrawerListener(drawerToggle);
 
+        drawerNav.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.menu_library:
+                        if (!item.isChecked()) {
+                            changeFragment(libraryFragment, "library");
+                            item.setChecked(true);
+                        }
+
+                    case R.id.menu_reading_list:
+                        if (!item.isChecked()) {
+                            changeFragment(ReadingListFragment.getInstance(), "readingList");
+                            item.setChecked(true);
+                        }
+                }
+                drawerLayout.closeDrawers();
+                return true;
+            }
+        });
 
         drawerToggle.syncState();
 
@@ -113,10 +140,10 @@ public class BookZap extends AppCompatActivity {
         Book b = new Book("Oathbringer", a, 0, R.drawable.oath, 1242);
         b.setRead(true);
         b.setReadTo(1242);
-        libraryFragment.addCard(b);
+        bookList.add(b);
         a = new Author("James", "Corey", 1);
         b = new Book("Leviathan Wakes", a, 0, R.drawable.lev, 561);
-        libraryFragment.addCard(b);
+        bookList.add(b);
     }
 
     @Override
@@ -202,6 +229,10 @@ public class BookZap extends AppCompatActivity {
 
     public void postLogin() {
         changeFragment(libraryFragment, "library");
+    }
+
+    public List<Book> getBookList() {
+        return bookList;
     }
 }
 

@@ -1,0 +1,82 @@
+package uk.co.beamsy.bookzap.bookzap.ui;
+
+import android.Manifest;
+import android.app.Fragment;
+import android.content.pm.PackageManager;
+import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.widget.LinearLayout;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import uk.co.beamsy.bookzap.bookzap.BookZap;
+import uk.co.beamsy.bookzap.bookzap.R;
+import uk.co.beamsy.bookzap.bookzap.model.Book;
+
+/**
+ * Created by Jake on 19/11/2017.
+ */
+
+public class ReadingListFragment extends Fragment {
+
+    private RecyclerView recyclerView;
+    private BookCardAdaptor bookAdaptor;
+    private List<Book> bookList;
+    private boolean isFabMenuOpen = false;
+
+    public ReadingListFragment(){
+
+    }
+
+    public static ReadingListFragment getInstance(){
+        ReadingListFragment ReadingListFragment = new ReadingListFragment();
+        ReadingListFragment.init();
+        return ReadingListFragment;
+    }
+
+    private void init() {
+        bookList = new ArrayList<>();
+        bookAdaptor = new BookCardAdaptor(this.getContext(), bookList, true);
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflator, ViewGroup container,
+                             Bundle savedInstanceState) {
+        final View rootView = inflator.inflate(R.layout.fragment_reading_list, container, false);
+        recyclerView = (RecyclerView)rootView.findViewById(R.id.reading_list_recycler_view);
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this.getContext(), 1);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(bookAdaptor);
+        BookZap mainActivity = (BookZap) getActivity();
+        mainActivity.changeDrawerBack(false);
+        mainActivity.setTitle("Reading List");
+        bookList.addAll(((BookZap)getActivity()).getBookList());
+        return rootView;
+    }
+
+    public void addCard(Book b) {
+        bookList.add(b);
+        bookAdaptor.notifyDataSetChanged();
+    }
+
+    public void setBookList(List<Book> bookList) {
+        this.bookList = bookList;
+        bookAdaptor.notifyDataSetChanged();
+    }
+}
