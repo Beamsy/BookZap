@@ -101,10 +101,10 @@ public class BookZap extends AppCompatActivity {
 
     private void prepareData(){
         Author a = new Author("Brandon", "Sanderson", 0);
-        Book b = new Book("Oathbringer", a, 0, R.drawable.oath);
+        Book b = new Book("Oathbringer", a, 0, R.drawable.oath, 1242);
         libraryFragment.addCard(b);
         a = new Author("James", "Corey", 1);
-        b = new Book("Leviathan Wakes", a, 0, R.drawable.lev);
+        b = new Book("Leviathan Wakes", a, 0, R.drawable.lev, 561);
         libraryFragment.addCard(b);
     }
 

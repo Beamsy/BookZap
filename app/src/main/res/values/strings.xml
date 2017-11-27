@@ -15,4 +15,8 @@
     <string name="book_title">Book title</string>
     <string name="book_progress">Book Progress</string>
     <string name="create">Create</string>
+    <string name="add_isbn">ISBN:</string>
+    <string name="add_title">Title:</string>
+    <string name="add_author">Author:</string>
+    <string name="read">Read</string>
 </resources>

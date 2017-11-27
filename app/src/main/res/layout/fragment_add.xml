@@ -1,8 +1,108 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="uk.co.beamsy.bookzap.bookzap.ui.AddFragment">
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
 
-</FrameLayout>
+        <TextView
+            android:id="@+id/add_isbn_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:labelFor="@+id/add_isbn_edit"
+            android:text="@string/add_isbn"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@+id/add_isbn_edit"
+            app:layout_constraintEnd_toStartOf="@+id/add_isbn_edit"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/add_isbn_edit"
+            app:layout_constraintVertical_bias="0.4" />
+
+        <EditText
+            android:id="@+id/add_title_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:ems="10"
+            android:inputType="number"
+            app:layout_constraintEnd_toEndOf="@+id/add_isbn_edit"
+            app:layout_constraintStart_toStartOf="@+id/add_isbn_edit"
+            app:layout_constraintTop_toBottomOf="@+id/add_isbn_edit" />
+
+        <TextView
+            android:id="@+id/add_title_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            android:labelFor="@+id/add_title_edit"
+            android:text="@string/add_title"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@+id/add_title_edit"
+            app:layout_constraintEnd_toEndOf="@+id/add_isbn_text"
+            app:layout_constraintStart_toStartOf="@+id/add_isbn_text"
+            app:layout_constraintTop_toTopOf="@+id/add_title_edit" />
+
+        <EditText
+            android:id="@+id/add_isbn_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="56dp"
+            android:ems="10"
+            android:inputType="number"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/add_isbn_text"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/add_author_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:layout_marginTop="8dp"
+            android:labelFor="@+id/add_author_edit"
+            android:text="@string/add_author"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@+id/add_author_edit"
+            app:layout_constraintEnd_toEndOf="@+id/add_title_text"
+            app:layout_constraintStart_toStartOf="@+id/add_title_text"
+            app:layout_constraintTop_toTopOf="@+id/add_author_edit" />
+
+        <EditText
+            android:id="@+id/add_author_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:ems="10"
+            android:inputType="number"
+            app:layout_constraintEnd_toEndOf="@+id/add_title_edit"
+            app:layout_constraintStart_toStartOf="@+id/add_title_edit"
+            app:layout_constraintTop_toBottomOf="@+id/add_title_edit" />
+
+        <Button
+            android:id="@+id/add_search_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="32dp"
+            android:text="@android:string/search_go"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/add_author_edit" />
+    </android.support.constraint.ConstraintLayout>
+
+</LinearLayout>
+

@@ -47,7 +47,7 @@ public class LibraryFragment extends Fragment {
 
     private void init() {
         bookList = new ArrayList<>();
-        bookAdaptor = new BookCardAdaptor(this.getContext(), bookList);
+        bookAdaptor = new BookCardAdaptor(this.getContext(), bookList, true);
     }
 
     @Override

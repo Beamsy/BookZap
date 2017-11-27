@@ -10,14 +10,16 @@ import android.media.Image;
 public class Book {
     private String title;
     private Author author;
-    private int ISBN;
-    private int coverId;
+    private int ISBN, coverId;
+    private int readTo, pageCount = 0;
+    private boolean isRead = false;
 
-    public Book(String title, Author author, int ISBN, int coverId) {
+    public Book(String title, Author author, int ISBN, int coverId, int pageCount) {
         this.title = title;
         this.author = author;
         this.ISBN = ISBN;
         this.coverId = coverId;
+        this.pageCount = pageCount;
     }
 
     public String getTitle() {
@@ -34,5 +36,21 @@ public class Book {
 
     public int getCoverId() {
         return coverId;
+    }
+
+    public boolean isRead() {
+        return isRead;
+    }
+
+    public void setRead(boolean read) {
+        isRead = read;
+    }
+
+    public int getPageCount() {
+        return pageCount;
+    }
+
+    public void setCoverId(int coverId) {
+        this.coverId = coverId;
     }
 }

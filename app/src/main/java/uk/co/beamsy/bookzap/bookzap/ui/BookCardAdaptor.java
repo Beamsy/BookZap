@@ -3,11 +3,13 @@ package uk.co.beamsy.bookzap.bookzap.ui;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.List;
@@ -23,16 +25,23 @@ public class BookCardAdaptor extends RecyclerView.Adapter<BookCardAdaptor.Recycl
 
     private Context context;
     private List<Book> bookList;
+    private boolean isLibrary;
 
 
     public class RecyclerCardViewHolder extends RecyclerView.ViewHolder{
-        public TextView bookTitle, authorName;
+        public TextView bookTitle, authorName, progressText, isRead;
         public ImageView bookCover;
+        public ProgressBar progressRead;
+        public ConstraintLayout progressLayout;
         public RecyclerCardViewHolder(View vi){
             super(vi);
             this.bookTitle = (TextView)vi.findViewById(R.id.book_title);
             this.authorName = (TextView)vi.findViewById(R.id.author_name);
             this.bookCover = (ImageView)vi.findViewById(R.id.book_cover);
+            this.isRead = (TextView)vi.findViewById(R.id.is_read_text);
+            this.progressText = (TextView)vi.findViewById(R.id.progress_read_text);
+            this.progressRead = (ProgressBar)vi.findViewById(R.id.progress_read);
+            this.progressLayout = (ConstraintLayout)vi.findViewById(R.id.progress_layout);
         }
     }
 
@@ -51,7 +60,16 @@ public class BookCardAdaptor extends RecyclerView.Adapter<BookCardAdaptor.Recycl
         holder.bookTitle.setText(book.getTitle());
         holder.authorName.setText(book.getAuthor().getName());
         holder.bookCover.setImageBitmap(BitmapFactory.decodeResource(holder.bookTitle.getContext().getResources(), book.getCoverId()));
+        if (book.isRead()) {
+            holder.isRead.setVisibility(View.VISIBLE);
+        }
+        if (!isLibrary) {
+            holder.progressLayout.setVisibility(View.GONE);
+        } else {
+            holder.progressRead.setProgress(50);
+        }
     }
+
 
     @Override
     public int getItemCount() {
@@ -60,8 +78,9 @@ public class BookCardAdaptor extends RecyclerView.Adapter<BookCardAdaptor.Recycl
 
 
 
-    public BookCardAdaptor(Context _context, List<Book> _bookList){
-        this.context = _context;
-        this.bookList = _bookList;
+    public BookCardAdaptor(Context context, List<Book> bookList, boolean isLibrary){
+        this.context = context;
+        this.bookList = bookList;
+        this.isLibrary = isLibrary;
     }
 }
