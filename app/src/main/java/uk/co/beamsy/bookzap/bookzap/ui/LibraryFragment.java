@@ -52,7 +52,6 @@ public class LibraryFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
     }
 
@@ -61,10 +60,9 @@ public class LibraryFragment extends Fragment {
                              Bundle savedInstanceState) {
         Log.d("LibraryFragment onCreateView", "Entry");
         final View rootView = inflator.inflate(R.layout.fragment_library, container, false);
-        recyclerView = (RecyclerView)rootView.findViewById(R.id.recycler_view);
-
-        RecyclerView.LayoutManager _layoutManager = new GridLayoutManager(this.getContext(), 1);
-        recyclerView.setLayoutManager(_layoutManager);
+        recyclerView = (RecyclerView)rootView.findViewById(R.id.library_recycler_view);
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this.getContext(), 1);
+        recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(bookAdaptor);
         FloatingActionButton addMain = (FloatingActionButton)rootView.findViewById(R.id.fab_main);
@@ -102,7 +100,7 @@ public class LibraryFragment extends Fragment {
             public void onClick(View vi) {
                 if(isFabMenuOpen) {
                     BookZap mainActivity = (BookZap) getActivity();
-                    mainActivity.changeFragment(LoginFragment.getInstance(), "login");
+                    mainActivity.changeFragment(AddFragment.getInstance(), "login");
                     isFabMenuOpen = false;
                 }
             }

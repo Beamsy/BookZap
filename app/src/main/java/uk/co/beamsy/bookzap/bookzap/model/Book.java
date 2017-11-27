@@ -53,4 +53,15 @@ public class Book {
     public void setCoverId(int coverId) {
         this.coverId = coverId;
     }
+
+    public int getReadTo() {
+        return readTo;
+    }
+
+    public void setReadTo(int readTo) {
+        if (readTo > pageCount){
+            readTo = pageCount;
+        }
+        this.readTo = readTo;
+    }
 }

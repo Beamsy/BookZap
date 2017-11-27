@@ -44,7 +44,7 @@
                 android:background="@drawable/ic_rounded_corner"
                 android:gravity="center_vertical|center_horizontal"
                 android:text="@string/add_manually"
-                android:textColor="@color/colourPrimaryDark" />
+                android:textColor="@android:color/white" />
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/fab_add"
@@ -72,7 +72,7 @@
                 android:background="@drawable/ic_rounded_corner"
                 android:gravity="center_vertical|center_horizontal"
                 android:text="@string/add_scan"
-                android:textColor="@color/colourPrimaryDark" />
+                android:textColor="@android:color/white" />
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/fab_scan"
@@ -88,7 +88,7 @@
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view"
+        android:id="@+id/library_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scrollbars="vertical"

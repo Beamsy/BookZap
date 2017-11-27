@@ -75,7 +75,7 @@ public class ScannerFragment extends Fragment {
 
             @Override
             public void surfaceDestroyed(SurfaceHolder holder) {
-
+                cameraSource.stop();
             }
         });
 
@@ -85,8 +85,5 @@ public class ScannerFragment extends Fragment {
 
         return rootView;
     }
-
-
-
 
 }
