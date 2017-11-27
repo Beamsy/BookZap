@@ -35,7 +35,7 @@ public class LoginFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_login, container, false);
         BookZap mainActivity = (BookZap) getActivity();
-        mainActivity.changeDrawerBack(true);
+        mainActivity.hideHome();
         TextView createLink = (TextView) rootView.findViewById(R.id.text_account_create_link);
         createLink.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -65,6 +65,7 @@ public class LoginFragment extends BaseFragment {
                 }
             }
         });
+        mainActivity.setTitle("BookZap");
         return rootView;
     }
 

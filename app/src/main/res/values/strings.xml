@@ -10,6 +10,7 @@
     <string name="add_scan">Scan barcode</string>
     <string name="account_create_link">Not got an account? Click here</string>
     <string name="login">Login</string>
+    <string name="logout">Logout</string>
     <string name="enter_email">Enter email</string>
     <string name="enter_password">Enter password</string>
     <string name="book_title">Book title</string>
@@ -19,4 +20,7 @@
     <string name="add_title">Title:</string>
     <string name="add_author">Author:</string>
     <string name="read">Read</string>
+    <string name="library">Library</string>
+    <string name="reading_list">Reading List</string>
+    <string name="hello">Hello</string>
 </resources>
