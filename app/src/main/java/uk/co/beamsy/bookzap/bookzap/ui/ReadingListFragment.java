@@ -76,7 +76,8 @@ public class ReadingListFragment extends Fragment {
     }
 
     public void setBookList(List<Book> bookList) {
-        this.bookList = bookList;
+        this.bookList.clear();
+        this.bookList.addAll(bookList);
         bookAdaptor.notifyDataSetChanged();
     }
 }

@@ -152,6 +152,7 @@ public class LibraryFragment extends Fragment {
     }
 
     public void setBookList(List<Book> _bookList) {
+        this.bookList.clear();
         this.bookList.addAll(_bookList);
         bookAdaptor.notifyDataSetChanged();
     }
