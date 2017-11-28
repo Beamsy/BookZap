@@ -1,7 +1,5 @@
-package uk.co.beamsy.bookzap.bookzap.ui;
+package uk.co.beamsy.bookzap.bookzap.ui.fragments;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.constraint.ConstraintLayout;
@@ -20,6 +18,7 @@ import uk.co.beamsy.bookzap.bookzap.BookZap;
 import uk.co.beamsy.bookzap.bookzap.R;
 import uk.co.beamsy.bookzap.bookzap.model.Author;
 import uk.co.beamsy.bookzap.bookzap.model.Book;
+import uk.co.beamsy.bookzap.bookzap.ui.BookCardAdaptor;
 
 
 public class AddFragment extends Fragment {

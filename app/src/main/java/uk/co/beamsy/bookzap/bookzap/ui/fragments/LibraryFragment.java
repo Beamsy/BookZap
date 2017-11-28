@@ -1,10 +1,9 @@
-package uk.co.beamsy.bookzap.bookzap.ui;
+package uk.co.beamsy.bookzap.bookzap.ui.fragments;
 
 import android.Manifest;
 import android.app.Fragment;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -24,10 +23,8 @@ import java.util.List;
 import uk.co.beamsy.bookzap.bookzap.BookZap;
 import uk.co.beamsy.bookzap.bookzap.model.Book;
 import uk.co.beamsy.bookzap.bookzap.R;
-
-/**
- * Created by Jake on 19/11/2017.
- */
+import uk.co.beamsy.bookzap.bookzap.ui.BookCardAdaptor;
+import uk.co.beamsy.bookzap.bookzap.ui.RecyclerViewOnTouchItemListener;
 
 public class LibraryFragment extends Fragment {
 
@@ -61,6 +58,7 @@ public class LibraryFragment extends Fragment {
                              Bundle savedInstanceState) {
         Log.d("LibraryFragment onCreateView", "Entry");
         final View rootView = inflator.inflate(R.layout.fragment_library, container, false);
+        final BookZap mainActivity = (BookZap) getActivity();
         recyclerView = (RecyclerView)rootView.findViewById(R.id.library_recycler_view);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this.getContext(), 1);
         recyclerView.setLayoutManager(layoutManager);
@@ -107,24 +105,26 @@ public class LibraryFragment extends Fragment {
             }
         });
         //TODO: Implement OnItemTouchLogic
-        recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+        recyclerView.addOnItemTouchListener(new RecyclerViewOnTouchItemListener(
+                this.getContext(), recyclerView,
+                new RecyclerViewOnTouchItemListener.OnTouchListener() {
             @Override
-            public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
-                return false;
+            public void onTap(View view, int adaptorPosition) {
+                Book book = mainActivity.getBookList().get(adaptorPosition);
+                BookFragment fragment = BookFragment.getInstance();
+                fragment.setBook(book);
+                mainActivity.changeFragment(fragment, "book");
             }
 
             @Override
-            public void onTouchEvent(RecyclerView rv, MotionEvent e) {
+            public void onHold(View view, int adaptorPosition) {
 
             }
+        }));
 
-            @Override
-            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
 
-            }
-        });
         Log.d("LibraryFragment onCreateView", "Exit");
-        BookZap mainActivity = (BookZap) getActivity();
+
         mainActivity.changeDrawerBack(false);
         mainActivity.setTitle("Library");
         setBookList(mainActivity.getBookList());
@@ -151,9 +151,13 @@ public class LibraryFragment extends Fragment {
         containerLayout.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.fade_slide_out));
     }
 
-    public void setBookList(List<Book> _bookList) {
+    public void setBookList(List<Book> bookList) {
+        if (this.bookList == null) {
+            this.bookList = new ArrayList<>();
+            bookAdaptor = new BookCardAdaptor(this.getContext(), this.bookList, true);
+        }
         this.bookList.clear();
-        this.bookList.addAll(_bookList);
+        this.bookList.addAll(bookList);
         bookAdaptor.notifyDataSetChanged();
     }
 }

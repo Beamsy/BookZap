@@ -4,19 +4,14 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,9 +23,9 @@ import java.util.List;
 
 import uk.co.beamsy.bookzap.bookzap.model.Author;
 import uk.co.beamsy.bookzap.bookzap.model.Book;
-import uk.co.beamsy.bookzap.bookzap.ui.LibraryFragment;
-import uk.co.beamsy.bookzap.bookzap.ui.LoginFragment;
-import uk.co.beamsy.bookzap.bookzap.ui.ReadingListFragment;
+import uk.co.beamsy.bookzap.bookzap.ui.fragments.LibraryFragment;
+import uk.co.beamsy.bookzap.bookzap.ui.fragments.LoginFragment;
+import uk.co.beamsy.bookzap.bookzap.ui.fragments.ReadingListFragment;
 
 
 public class BookZap extends AppCompatActivity {

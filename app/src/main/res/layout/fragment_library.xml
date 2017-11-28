@@ -31,8 +31,8 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingBottom="10dp">
 
             <TextView
                 android:id="@+id/text_add"
@@ -70,9 +70,13 @@
                 android:layout_marginEnd="10dp"
                 android:layout_weight="1"
                 android:background="@drawable/ic_rounded_corner"
+                android:baselineAligned="false"
                 android:gravity="center_vertical|center_horizontal"
+                android:padding="2dp"
                 android:text="@string/add_scan"
-                android:textColor="@android:color/white" />
+                android:textAlignment="center"
+                android:textColor="@android:color/white"
+                android:textSize="12sp" />
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/fab_scan"

@@ -1,11 +1,9 @@
-package uk.co.beamsy.bookzap.bookzap.ui;
+package uk.co.beamsy.bookzap.bookzap.ui.fragments;
 
 import android.Manifest;
 import android.app.Fragment;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
@@ -23,9 +21,7 @@ import java.io.IOException;
 import uk.co.beamsy.bookzap.bookzap.BookZap;
 import uk.co.beamsy.bookzap.bookzap.R;
 
-/**
- * Created by Jake on 20/11/2017.
- */
+
 
 public class ScannerFragment extends Fragment {
     private SurfaceView cameraView;
