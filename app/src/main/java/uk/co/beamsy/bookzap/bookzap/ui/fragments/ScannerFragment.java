@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -13,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.google.android.gms.vision.CameraSource;
+import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 
@@ -48,6 +50,7 @@ public class ScannerFragment extends Fragment {
         BarcodeDetector barcodeDetector = new BarcodeDetector.Builder(rootView.getContext())
                 .setBarcodeFormats(Barcode.ISBN)
                 .build();
+
         final CameraSource cameraSource = new CameraSource
                 .Builder(rootView.getContext(), barcodeDetector)
                 .setAutoFocusEnabled(true)
@@ -76,7 +79,20 @@ public class ScannerFragment extends Fragment {
                 cameraSource.stop();
             }
         });
+        barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
+            @Override
+            public void release() {
+            cameraSource.release();
+            }
 
+            @Override
+            public void receiveDetections(Detector.Detections<Barcode> detections) {
+                final SparseArray<Barcode> barcodes = detections.getDetectedItems();
+                if (barcodes.size() != 0) {
+                    barcodeInfo.setText(barcodes.get(0).displayValue);
+                }
+            }
+        });
 
 
 
