@@ -1,5 +1,7 @@
 package uk.co.beamsy.bookzap.bookzap.model;
 
+import android.support.annotation.Nullable;
+
 /**
  * Created by jake on 15/11/17.
  */
@@ -8,6 +10,10 @@ public class Author {
     private String firstName;
     private String lastName;
     private int authorId;
+
+    public Author() {
+
+    }
 
     public Author(String firstName, String lastName, int authorId) {
         this.firstName = firstName;
@@ -27,7 +33,7 @@ public class Author {
         return authorId;
     }
 
-    public String getName() {
-        return firstName+" "+lastName;
+    public String authorName (@Nullable String key) {
+        return firstName + " " + lastName;
     }
 }

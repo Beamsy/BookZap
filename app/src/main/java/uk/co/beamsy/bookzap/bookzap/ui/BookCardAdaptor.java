@@ -58,7 +58,7 @@ public class BookCardAdaptor extends RecyclerView.Adapter<BookCardAdaptor.Recycl
     public void onBindViewHolder(final RecyclerCardViewHolder holder, int position) {
         Book book = bookList.get(position);
         holder.bookTitle.setText(book.getTitle());
-        holder.authorName.setText(book.getAuthor().getName());
+        holder.authorName.setText(book.getAuthor().authorName(null));
         holder.bookCover.setImageBitmap(BitmapFactory.decodeResource(holder.bookTitle.getContext().getResources(), book.getCoverId()));
         if (book.isRead()) {
             holder.isRead.setVisibility(View.VISIBLE);

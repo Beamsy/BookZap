@@ -10,11 +10,13 @@ import android.media.Image;
 public class Book {
     private String title;
     private Author author;
-    private int ISBN, coverId;
-    private int readTo, pageCount = 0;
+    private int coverId, readTo, pageCount = 0;
+    private double ISBN;
     private boolean isRead = false;
 
-    public Book(String title, Author author, int ISBN, int coverId, int pageCount) {
+    public Book() {}
+
+    public Book(String title, Author author, double ISBN, int coverId, int pageCount) {
         this.title = title;
         this.author = author;
         this.ISBN = ISBN;
@@ -30,7 +32,7 @@ public class Book {
         return author;
     }
 
-    public int getISBN() {
+    public double getISBN() {
         return ISBN;
     }
 
@@ -64,4 +66,5 @@ public class Book {
         }
         this.readTo = readTo;
     }
+
 }

@@ -41,7 +41,7 @@ public class BookFragment extends Fragment {
         TextView bookTitle = (TextView) rootView.findViewById(R.id.book_title);
         bookTitle.setText(book.getTitle());
         TextView authorName = (TextView) rootView.findViewById(R.id.author_name);
-        authorName.setText(book.getAuthor().getName());
+        authorName.setText(book.getAuthor().authorName(null));
         ImageView bookCover = (ImageView) rootView.findViewById(R.id.book_cover);
         bookCover.setImageBitmap(BitmapFactory.decodeResource(bookTitle.getContext().getResources(), book.getCoverId()));
         TextView progressText = (TextView)rootView.findViewById(R.id.progress_read_text);

@@ -35,6 +35,7 @@ public class BookZap extends AppCompatActivity {
     private ActionBarDrawerToggle drawerToggle;
     private LibraryFragment libraryFragment;
     private FirebaseAuth auth;
+    private FirestoreControl fs;
     private FirebaseUser currentUser;
     private TextView logoutText;
     private List<Book> bookList = new ArrayList<>();
@@ -52,7 +53,7 @@ public class BookZap extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_zap);
-        prepareData();
+
         drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         drawerNav = (NavigationView)findViewById(R.id.nav_view);
         logoutText = (TextView) drawerNav.getHeaderView(0).findViewById(R.id.log_out);
@@ -87,6 +88,8 @@ public class BookZap extends AppCompatActivity {
             changeFragment(libraryFragment, "library");
             if (currentUser.getDisplayName() != null) {
                 userText.setText("Hello " + currentUser.getDisplayName());
+                fs = FirestoreControl.getInstance(currentUser);
+                prepareData();
             }
         } else {
             LoginFragment loginFragment = LoginFragment.getInstance();
@@ -132,12 +135,12 @@ public class BookZap extends AppCompatActivity {
 
     private void prepareData(){
         Author a = new Author("Brandon", "Sanderson", 0);
-        Book b = new Book("Oathbringer", a, 0, R.drawable.oath, 1242);
+        Book b = new Book("Oathbringer", a, 9780575093331D, R.drawable.oath, 1242);
         b.setRead(true);
         b.setReadTo(1242);
         bookList.add(b);
         a = new Author("James", "Corey", 1);
-        b = new Book("Leviathan Wakes", a, 0, R.drawable.lev, 561);
+        b = new Book("Leviathan Wakes", a, 9780316129084D, R.drawable.lev, 561);
         bookList.add(b);
     }
 
@@ -223,6 +226,8 @@ public class BookZap extends AppCompatActivity {
     }
 
     public void postLogin() {
+        FirestoreControl fs = FirestoreControl.getInstance(currentUser);
+        fs.getBookPage(0);
         changeFragment(libraryFragment, "library");
     }
 
