@@ -61,7 +61,7 @@ public class BookCardAdaptor extends RecyclerView.Adapter<BookCardAdaptor.Recycl
     public void onBindViewHolder(final RecyclerCardViewHolder holder, int position) {
         Book book = bookList.get(position);
         holder.bookTitle.setText(book.getTitle());
-        holder.authorName.setText(book.getAuthor().authorName(null));
+        holder.authorName.setText(book.getAuthor());
         Glide
                 .with(holder.itemView.getContext())
                 .load(book.getCoverUri())

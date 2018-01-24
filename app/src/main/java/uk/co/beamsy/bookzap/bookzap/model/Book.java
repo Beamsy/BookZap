@@ -10,23 +10,14 @@ import java.net.URI;
 
 public class Book {
     private String title;
-    private Author author;
-    private int coverId, readTo, pageCount = 0;
+    private String author;
+    private int pageCount = 0;
     private double ISBN;
-    private boolean isRead = false, isFavourite = false;
     private Uri coverUri;
 
     public Book() {}
 
-    public Book(String title, Author author, double ISBN, int coverId, int pageCount) {
-        this.title = title;
-        this.author = author;
-        this.ISBN = ISBN;
-        this.coverId = coverId;
-        this.pageCount = pageCount;
-    }
-
-    public Book(String title, Author author, double ISBN, Uri coverUri, int pageCount) {
+    public Book(String title, String author, double ISBN, Uri coverUri, int pageCount) {
         this.title = title;
         this.author = author;
         this.ISBN = ISBN;
@@ -38,7 +29,7 @@ public class Book {
         return title;
     }
 
-    public Author getAuthor() {
+    public String getAuthor() {
         return author;
     }
 
@@ -46,46 +37,12 @@ public class Book {
         return ISBN;
     }
 
-    public int getCoverId() {
-        return coverId;
-    }
-
-    public boolean isRead() {
-        return isRead;
-    }
-
-    public void setRead(boolean read) {
-        isRead = read;
-    }
-
     public int getPageCount() {
         return pageCount;
-    }
-
-    public void setCoverId(int coverId) {
-        this.coverId = coverId;
-    }
-
-    public int getReadTo() {
-        return readTo;
-    }
-
-    public void setReadTo(int readTo) {
-        if (readTo > pageCount){
-            readTo = pageCount;
-        }
-        this.readTo = readTo;
     }
 
     public Uri getCoverUri() {
         return coverUri;
     }
 
-    public boolean isFavourite() {
-        return isFavourite;
-    }
-
-    public void setFavourite(boolean favourite) {
-        isFavourite = favourite;
-    }
 }

@@ -135,13 +135,11 @@ public class BookZap extends AppCompatActivity {
     }
 
     private void prepareData(){
-        Author a = new Author("Brandon", "Sanderson", 0);
-        Book b = new Book("Oathbringer", a, 9780575093331D, Uri.parse("android.resource://uk.co.beamsy.bookzap.bookzap/"+R.drawable.oath), 1242);
+        Book b = new Book("Oathbringer", "Brandon Sanderson", 9780575093331D, Uri.parse("android.resource://uk.co.beamsy.bookzap.bookzap/"+R.drawable.oath), 1242);
         b.setRead(true);
         b.setReadTo(1242);
         bookList.add(b);
-        a = new Author("James", "Corey", 1);
-        b = new Book("Leviathan Wakes", a, 9780316129084D, Uri.parse("android.resource://uk.co.beamsy.bookzap.bookzap/"+R.drawable.lev), 561);
+        b = new Book("Leviathan Wakes", "James S. A. Corey", 9780316129084D, Uri.parse("android.resource://uk.co.beamsy.bookzap.bookzap/"+R.drawable.lev), 561);
         bookList.add(b);
     }
 

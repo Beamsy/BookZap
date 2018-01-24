@@ -25,7 +25,7 @@ import uk.co.beamsy.bookzap.bookzap.model.Book;
 
 
 public class BookFragment extends Fragment {
-    private Book book = new Book("Blank", new Author("No", "One", 0), 0, R.drawable.ic_launcher_foreground, 1);
+    private Book book = new Book("Blank", "No_one", 0, R.drawable.ic_launcher_foreground, 1);
 
     public BookFragment(){
         //Required empty constructor
@@ -44,7 +44,7 @@ public class BookFragment extends Fragment {
         TextView bookTitle = (TextView) rootView.findViewById(R.id.book_title);
         bookTitle.setText(book.getTitle());
         TextView authorName = (TextView) rootView.findViewById(R.id.author_name);
-        authorName.setText(book.getAuthor().authorName(null));
+        authorName.setText(book.getAuthor());
         ImageView bookCover = (ImageView) rootView.findViewById(R.id.book_cover);
         Glide
                 .with(container.getContext())

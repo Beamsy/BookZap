@@ -140,12 +140,6 @@ public class AddFragment extends Fragment {
             }
         });
         queue.add(jORequest);
-        Author a = new Author("Brandon", "Sanderson", 0);
-        Book b = new Book("Oathbringer", a, 0, R.drawable.oath, 1242);
-        bookList.add(b);
-        a = new Author("James", "Corey", 1);
-        b = new Book("Leviathan Wakes", a, 0, R.drawable.lev, 561);
-        bookList.add(b);
         bookAdaptor.notifyDataSetChanged();
     }
 
@@ -167,9 +161,6 @@ public class AddFragment extends Fragment {
     }
 
     private Book jsonToBook(JSONObject bookObject) throws JSONException{
-        String fName = bookObject.getJSONObject("volumeInfo").getJSONArray("authors").getString(0).split("[[:space:]]")[0];
-        String lName = bookObject.getJSONObject("volumeInfo").getJSONArray("authors").getString(0).split("[[:space:]]")[1];
-        Author author = new Author(fName, lName, 0);
         Double isbn = 0d;
         JSONArray jA = bookObject.getJSONObject("volumeInfo").getJSONArray("industryIdentifiers");
         for (int i = 0; i < jA.length(); i++) {
@@ -180,7 +171,7 @@ public class AddFragment extends Fragment {
         }
         Book book = new Book(
                 bookObject.getJSONObject("volumeInfo").getString("title"),
-                author,
+                bookObject.getJSONObject("volumeInfo").getJSONArray("authors").getString(0),
                 isbn,
                 Uri.parse(bookObject.getJSONObject("volumeInfo").getJSONObject("imageLinks").getString("thumbnail")),
                 bookObject.getJSONObject("volumeInfo").getInt("pageCount")
