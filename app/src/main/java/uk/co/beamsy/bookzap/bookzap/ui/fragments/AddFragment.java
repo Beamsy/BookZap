@@ -1,11 +1,13 @@
 package uk.co.beamsy.bookzap.bookzap.ui.fragments;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.ArrayMap;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +27,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,8 +49,8 @@ public class AddFragment extends Fragment {
     private Button searchButton;
     private boolean isSearched = false;
     private static String SEARCH_ISBN = "isbn";
-    private static String SEARCH_TITLE = "title";
-    private static String SEARCH_AUTHOR = "author";
+    private static String SEARCH_TITLE = "intitle";
+    private static String SEARCH_AUTHOR = "inauthor";
     private EditText isbnText, authorText, titleText;
 
     public AddFragment() {
@@ -88,13 +91,13 @@ public class AddFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (!isSearched) {
-                    Map<String,String> searchTerms = new HashMap<>();
+                    ArrayMap<String,String> searchTerms = new ArrayMap<>();
                     searchTerms.put(SEARCH_ISBN, isbnText.getText().toString());
                     searchTerms.put(SEARCH_AUTHOR, authorText.getText().toString());
                     searchTerms.put(SEARCH_TITLE, titleText.getText().toString());
 
                     populate(searchTerms);
-                    //constraintLayout.setVisibility(View.GONE);
+                    constraintLayout.setVisibility(View.GONE);
                     isSearched = true;
                 } else {
                     bookList.clear();
@@ -110,17 +113,24 @@ public class AddFragment extends Fragment {
         return rootView;
     }
 
-    private void populate(Map<String, String> searchTerms) {
+    private void populate(ArrayMap<String, String> searchTerms) {
         //TODO: Add method to search Google Book api
         RequestQueue queue = Volley.newRequestQueue(this.getContext());
-        String baseUrl = "https://www.googleapis.com/books/v1/volumes?q=";
-        String newUrl = baseUrl+"isbn:"+searchTerms.get(SEARCH_ISBN)+"+inauthor:"+searchTerms.get(SEARCH_AUTHOR)
-                +"+intitle:"+searchTerms.get(SEARCH_TITLE);
-        JsonObjectRequest jORequest = new JsonObjectRequest(Request.Method.GET, newUrl, null, new Response.Listener<JSONObject>() {
+        String Url = "https://www.googleapis.com/books/v1/volumes?q=";
+        for(int i = 0; i < searchTerms.size(); i++) {
+            if (!searchTerms.valueAt(i).isEmpty()){
+                Url = Url + searchTerms.keyAt(i) + ":" + searchTerms.valueAt(i) + "+";
+            }
+        }
+        final String fUrl = Url.replaceAll(" ", "%20");
+        Log.d ("URL: " ,fUrl);
+        JsonObjectRequest jORequest = new JsonObjectRequest(Request.Method.GET, fUrl, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                try {apiAdaptor(response); }
-                catch (JSONException e){
+                try {
+                    Log.d("URL: ", fUrl);
+                    apiAdaptor(response);
+                } catch (JSONException e) {
                     Log.e("A/F", "onResponse: ", e);
                 }
             }
@@ -141,6 +151,41 @@ public class AddFragment extends Fragment {
 
     private void apiAdaptor(JSONObject apiResponse) throws JSONException {
         JSONArray items = apiResponse.getJSONArray("items");
+        bookList.clear();
+        for (int i = 0; i < items.length();i++) {
+            JSONObject item = items.getJSONObject(i);
+            if (item.getString("kind").equals("books#volume")
+                && (item.getJSONObject("volumeInfo").has("printType") && item.getJSONObject("volumeInfo").getString("printType").equals("BOOK") )
+                && (item.getJSONObject("volumeInfo").has("language") && item.getJSONObject("volumeInfo").getString("language").equals("en") )
+                && item.getJSONObject("volumeInfo").has("pageCount")
+                && item.getJSONObject("volumeInfo").has("industryIdentifiers")
+                && (item.getJSONObject("volumeInfo").has("imageLinks") && item.getJSONObject("volumeInfo").getJSONObject("imageLinks").has("thumbnail"))) {
+                bookList.add(jsonToBook(item));
+            }
+        }
+        bookAdaptor.notifyDataSetChanged();
+    }
+
+    private Book jsonToBook(JSONObject bookObject) throws JSONException{
+        String fName = bookObject.getJSONObject("volumeInfo").getJSONArray("authors").getString(0).split("[[:space:]]")[0];
+        String lName = bookObject.getJSONObject("volumeInfo").getJSONArray("authors").getString(0).split("[[:space:]]")[1];
+        Author author = new Author(fName, lName, 0);
+        Double isbn = 0d;
+        JSONArray jA = bookObject.getJSONObject("volumeInfo").getJSONArray("industryIdentifiers");
+        for (int i = 0; i < jA.length(); i++) {
+            if (jA.getJSONObject(i).getString("type").equals("ISBN_13")) {
+                isbn = jA.getJSONObject(i).getDouble("identifier");
+                break;
+            }
+        }
+        Book book = new Book(
+                bookObject.getJSONObject("volumeInfo").getString("title"),
+                author,
+                isbn,
+                Uri.parse(bookObject.getJSONObject("volumeInfo").getJSONObject("imageLinks").getString("thumbnail")),
+                bookObject.getJSONObject("volumeInfo").getInt("pageCount")
+        );
+        return book;
     }
 
 }

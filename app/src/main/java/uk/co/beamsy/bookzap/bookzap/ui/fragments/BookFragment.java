@@ -15,6 +15,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.support.v7.widget.Toolbar;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+
 import uk.co.beamsy.bookzap.bookzap.BookZap;
 import uk.co.beamsy.bookzap.bookzap.R;
 import uk.co.beamsy.bookzap.bookzap.model.Author;
@@ -43,7 +46,11 @@ public class BookFragment extends Fragment {
         TextView authorName = (TextView) rootView.findViewById(R.id.author_name);
         authorName.setText(book.getAuthor().authorName(null));
         ImageView bookCover = (ImageView) rootView.findViewById(R.id.book_cover);
-        bookCover.setImageBitmap(BitmapFactory.decodeResource(bookTitle.getContext().getResources(), book.getCoverId()));
+        Glide
+                .with(container.getContext())
+                .load(book.getCoverUri())
+                .apply(RequestOptions.fitCenterTransform())
+                .into(bookCover);
         TextView progressText = (TextView)rootView.findViewById(R.id.progress_read_text);
         ProgressBar progressRead = (ProgressBar)rootView.findViewById(R.id.progress_read);
         TextView isRead = (TextView)rootView.findViewById(R.id.is_read_text);

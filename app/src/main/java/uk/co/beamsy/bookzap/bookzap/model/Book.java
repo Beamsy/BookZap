@@ -1,7 +1,8 @@
 package uk.co.beamsy.bookzap.bookzap.model;
 
-import android.graphics.drawable.Drawable;
-import android.media.Image;
+import android.net.Uri;
+
+import java.net.URI;
 
 /**
  * Created by jake on 15/11/17.
@@ -12,7 +13,8 @@ public class Book {
     private Author author;
     private int coverId, readTo, pageCount = 0;
     private double ISBN;
-    private boolean isRead = false;
+    private boolean isRead = false, isFavourite = false;
+    private Uri coverUri;
 
     public Book() {}
 
@@ -21,6 +23,14 @@ public class Book {
         this.author = author;
         this.ISBN = ISBN;
         this.coverId = coverId;
+        this.pageCount = pageCount;
+    }
+
+    public Book(String title, Author author, double ISBN, Uri coverUri, int pageCount) {
+        this.title = title;
+        this.author = author;
+        this.ISBN = ISBN;
+        this.coverUri = coverUri;
         this.pageCount = pageCount;
     }
 
@@ -67,4 +77,15 @@ public class Book {
         this.readTo = readTo;
     }
 
+    public Uri getCoverUri() {
+        return coverUri;
+    }
+
+    public boolean isFavourite() {
+        return isFavourite;
+    }
+
+    public void setFavourite(boolean favourite) {
+        isFavourite = favourite;
+    }
 }

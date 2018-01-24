@@ -12,6 +12,9 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+
 import java.util.List;
 
 import uk.co.beamsy.bookzap.bookzap.model.Book;
@@ -59,7 +62,11 @@ public class BookCardAdaptor extends RecyclerView.Adapter<BookCardAdaptor.Recycl
         Book book = bookList.get(position);
         holder.bookTitle.setText(book.getTitle());
         holder.authorName.setText(book.getAuthor().authorName(null));
-        holder.bookCover.setImageBitmap(BitmapFactory.decodeResource(holder.bookTitle.getContext().getResources(), book.getCoverId()));
+        Glide
+                .with(holder.itemView.getContext())
+                .load(book.getCoverUri())
+                .apply(RequestOptions.fitCenterTransform())
+                .into(holder.bookCover);
         if (book.isRead()) {
             holder.isRead.setVisibility(View.VISIBLE);
         }
@@ -71,13 +78,10 @@ public class BookCardAdaptor extends RecyclerView.Adapter<BookCardAdaptor.Recycl
         }
     }
 
-
     @Override
     public int getItemCount() {
         return bookList.size();
     }
-
-
 
     public BookCardAdaptor(Context context, List<Book> bookList, boolean isLibrary){
         this.context = context;

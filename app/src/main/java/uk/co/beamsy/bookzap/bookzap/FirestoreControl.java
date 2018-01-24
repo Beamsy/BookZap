@@ -79,6 +79,7 @@ public class FirestoreControl {
                                         Book book = documentSnapshot.toObject(Book.class);
                                         book.setRead((boolean) userBook.get("completed"));
                                         book.setReadTo((int) userBook.get("progress"));
+                                        book.setFavourite((boolean) userBook.get("favourite"));
                                         bookPage.add(book);
                                     }
                                 });
@@ -88,6 +89,8 @@ public class FirestoreControl {
             });
         return bookPage;
     }
+
+    //public
 
     public void addBook (Book book) {
         String isbn = String.format("%.0f", book.getISBN());

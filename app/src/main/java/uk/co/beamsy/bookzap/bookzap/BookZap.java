@@ -3,6 +3,7 @@ package uk.co.beamsy.bookzap.bookzap;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -135,12 +136,12 @@ public class BookZap extends AppCompatActivity {
 
     private void prepareData(){
         Author a = new Author("Brandon", "Sanderson", 0);
-        Book b = new Book("Oathbringer", a, 9780575093331D, R.drawable.oath, 1242);
+        Book b = new Book("Oathbringer", a, 9780575093331D, Uri.parse("android.resource://uk.co.beamsy.bookzap.bookzap/"+R.drawable.oath), 1242);
         b.setRead(true);
         b.setReadTo(1242);
         bookList.add(b);
         a = new Author("James", "Corey", 1);
-        b = new Book("Leviathan Wakes", a, 9780316129084D, R.drawable.lev, 561);
+        b = new Book("Leviathan Wakes", a, 9780316129084D, Uri.parse("android.resource://uk.co.beamsy.bookzap.bookzap/"+R.drawable.lev), 561);
         bookList.add(b);
     }
 
