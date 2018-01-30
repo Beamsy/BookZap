@@ -2,11 +2,14 @@ package uk.co.beamsy.bookzap.bookzap.ui.fragments;
 
 import android.app.Fragment;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.ActionMenuView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -19,13 +22,15 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
 import uk.co.beamsy.bookzap.bookzap.BookZap;
+import uk.co.beamsy.bookzap.bookzap.FirestoreControl;
 import uk.co.beamsy.bookzap.bookzap.R;
 import uk.co.beamsy.bookzap.bookzap.model.Author;
 import uk.co.beamsy.bookzap.bookzap.model.Book;
+import uk.co.beamsy.bookzap.bookzap.model.UserBook;
 
 
 public class BookFragment extends Fragment {
-    private Book book = new Book("Blank", "No_one", 0, R.drawable.ic_launcher_foreground, 1);
+    private UserBook book = new UserBook("Blank", "No_one", 0, Uri.parse("android.resource://uk.co.beamsy.bookzap.bookzap/" + R.drawable.ic_launcher_foreground), 1);
 
     public BookFragment(){
         //Required empty constructor
@@ -41,6 +46,20 @@ public class BookFragment extends Fragment {
         BookZap mainActivity = (BookZap) getActivity();
         Toolbar bookBar = (Toolbar) rootView.findViewById(R.id.book_toolbar);
         bookBar.inflateMenu(R.menu.book_toolbar_menu);
+        bookBar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Log.d("Menu: ", "clicked");
+                switch (item.getItemId()) {
+                    case R.id.menu_favourite:
+                        Log.d("Menu: ", "favourite");
+                        toggleFavourite();
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+        });
         TextView bookTitle = (TextView) rootView.findViewById(R.id.book_title);
         bookTitle.setText(book.getTitle());
         TextView authorName = (TextView) rootView.findViewById(R.id.author_name);
@@ -57,19 +76,22 @@ public class BookFragment extends Fragment {
         if (book.isRead()) {
             isRead.setVisibility(View.VISIBLE);
         }
-        progressRead.setProgress(((book.getReadTo()/book.getPageCount())*100));
+        Log.d("Book: ", String.valueOf(book.isFavourite()));
+        progressRead.setProgress(((int)(book.getReadTo()/book.getPageCount())*100));
         progressText.setText(book.getReadTo()+"/"+book.getPageCount());
         mainActivity.changeDrawerBack(true);
         mainActivity.setTitle(book.getTitle());
         return rootView;
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.book_toolbar_menu, menu);
+
+    public void toggleFavourite(){
+        book.setFavourite(!book.isFavourite());
+        FirestoreControl.getInstance().modifyUserBookData(book);
+
     }
 
-    public void setBook(Book book) {
+    public void setBook(UserBook book) {
         this.book = book;
     }
 }

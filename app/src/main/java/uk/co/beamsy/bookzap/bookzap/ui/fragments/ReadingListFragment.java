@@ -15,13 +15,14 @@ import java.util.List;
 import uk.co.beamsy.bookzap.bookzap.BookZap;
 import uk.co.beamsy.bookzap.bookzap.R;
 import uk.co.beamsy.bookzap.bookzap.model.Book;
+import uk.co.beamsy.bookzap.bookzap.model.UserBook;
 import uk.co.beamsy.bookzap.bookzap.ui.BookCardAdaptor;
 
 public class ReadingListFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private BookCardAdaptor bookAdaptor;
-    private List<Book> bookList;
+    private List<UserBook> bookList;
     private boolean isFabMenuOpen = false;
 
     public ReadingListFragment(){
@@ -60,12 +61,12 @@ public class ReadingListFragment extends Fragment {
         return rootView;
     }
 
-    public void addCard(Book b) {
+    public void addCard(UserBook b) {
         bookList.add(b);
         bookAdaptor.notifyDataSetChanged();
     }
 
-    public void setBookList(List<Book> bookList) {
+    public void setBookList(List<UserBook> bookList) {
         this.bookList.clear();
         this.bookList.addAll(bookList);
         bookAdaptor.notifyDataSetChanged();

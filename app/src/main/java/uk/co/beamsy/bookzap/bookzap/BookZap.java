@@ -22,8 +22,7 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.ArrayList;
 import java.util.List;
 
-import uk.co.beamsy.bookzap.bookzap.model.Author;
-import uk.co.beamsy.bookzap.bookzap.model.Book;
+import uk.co.beamsy.bookzap.bookzap.model.UserBook;
 import uk.co.beamsy.bookzap.bookzap.ui.fragments.LibraryFragment;
 import uk.co.beamsy.bookzap.bookzap.ui.fragments.LoginFragment;
 import uk.co.beamsy.bookzap.bookzap.ui.fragments.ReadingListFragment;
@@ -39,9 +38,7 @@ public class BookZap extends AppCompatActivity {
     private FirestoreControl fs;
     private FirebaseUser currentUser;
     private TextView logoutText;
-    private List<Book> bookList = new ArrayList<>();
-
-    public static final int PERMISSION_REQUEST_CAMERA = 100;
+    private List<UserBook> bookList = new ArrayList<>();
 
     @Override
     public void onStart() {
@@ -89,7 +86,7 @@ public class BookZap extends AppCompatActivity {
             changeFragment(libraryFragment, "library");
             if (currentUser.getDisplayName() != null) {
                 userText.setText("Hello " + currentUser.getDisplayName());
-                fs = FirestoreControl.getInstance(currentUser);
+                fs = FirestoreControl.makeInstance(currentUser);
                 prepareData();
             }
         } else {
@@ -135,11 +132,11 @@ public class BookZap extends AppCompatActivity {
     }
 
     private void prepareData(){
-        Book b = new Book("Oathbringer", "Brandon Sanderson", 9780575093331D, Uri.parse("android.resource://uk.co.beamsy.bookzap.bookzap/"+R.drawable.oath), 1242);
+        UserBook b = new UserBook("Oathbringer", "Brandon Sanderson", 9780575093331D, Uri.parse("android.resource://uk.co.beamsy.bookzap.bookzap/"+R.drawable.oath), 1242);
         b.setRead(true);
         b.setReadTo(1242);
         bookList.add(b);
-        b = new Book("Leviathan Wakes", "James S. A. Corey", 9780316129084D, Uri.parse("android.resource://uk.co.beamsy.bookzap.bookzap/"+R.drawable.lev), 561);
+        b = new UserBook("Leviathan Wakes", "James S. A. Corey", 9780316129084D, Uri.parse("android.resource://uk.co.beamsy.bookzap.bookzap/"+R.drawable.lev), 561);
         bookList.add(b);
     }
 
@@ -225,12 +222,12 @@ public class BookZap extends AppCompatActivity {
     }
 
     public void postLogin() {
-        FirestoreControl fs = FirestoreControl.getInstance(currentUser);
+        FirestoreControl fs = FirestoreControl.makeInstance(currentUser);
         fs.getBookPage(0);
         changeFragment(libraryFragment, "library");
     }
 
-    public List<Book> getBookList() {
+    public List<UserBook> getBookList() {
         return bookList;
     }
 }

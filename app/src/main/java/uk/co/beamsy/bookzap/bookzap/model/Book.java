@@ -11,18 +11,22 @@ import java.net.URI;
 public class Book {
     private String title;
     private String author;
-    private int pageCount = 0;
+    private long pageCount = 0;
     private double ISBN;
     private Uri coverUri;
 
     public Book() {}
 
-    public Book(String title, String author, double ISBN, Uri coverUri, int pageCount) {
+    public Book(String title, String author, double ISBN, Uri coverUri, long pageCount) {
         this.title = title;
         this.author = author;
         this.ISBN = ISBN;
         this.coverUri = coverUri;
         this.pageCount = pageCount;
+    }
+
+    public void setCoverUri(String coverUri) {
+        Uri.parse(coverUri);
     }
 
     public String getTitle() {
@@ -37,7 +41,7 @@ public class Book {
         return ISBN;
     }
 
-    public int getPageCount() {
+    public long getPageCount() {
         return pageCount;
     }
 

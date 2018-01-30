@@ -38,6 +38,7 @@ import uk.co.beamsy.bookzap.bookzap.BookZap;
 import uk.co.beamsy.bookzap.bookzap.R;
 import uk.co.beamsy.bookzap.bookzap.model.Author;
 import uk.co.beamsy.bookzap.bookzap.model.Book;
+import uk.co.beamsy.bookzap.bookzap.model.UserBook;
 import uk.co.beamsy.bookzap.bookzap.ui.BookCardAdaptor;
 
 
@@ -45,7 +46,7 @@ public class AddFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private BookCardAdaptor bookAdaptor;
-    private List<Book> bookList;
+    private List<UserBook> bookList;
     private Button searchButton;
     private boolean isSearched = false;
     private static String SEARCH_ISBN = "isbn";
@@ -160,7 +161,7 @@ public class AddFragment extends Fragment {
         bookAdaptor.notifyDataSetChanged();
     }
 
-    private Book jsonToBook(JSONObject bookObject) throws JSONException{
+    private UserBook jsonToBook(JSONObject bookObject) throws JSONException{
         Double isbn = 0d;
         JSONArray jA = bookObject.getJSONObject("volumeInfo").getJSONArray("industryIdentifiers");
         for (int i = 0; i < jA.length(); i++) {
@@ -169,7 +170,7 @@ public class AddFragment extends Fragment {
                 break;
             }
         }
-        Book book = new Book(
+        UserBook book = new UserBook(
                 bookObject.getJSONObject("volumeInfo").getString("title"),
                 bookObject.getJSONObject("volumeInfo").getJSONArray("authors").getString(0),
                 isbn,

@@ -1,26 +1,38 @@
 package uk.co.beamsy.bookzap.bookzap.model;
 
+import android.net.Uri;
+import android.util.Log;
+
 /**
  * Created by BEA17007261 on 24/01/2018.
  */
 
-public class UserBook {
-    private Book book;
+public class UserBook extends Book {
     private boolean isRead = false, isFavourite = false;
-    private int readTo;
+    private long readTo;
 
-    public UserBook(Book book) {
-        this.book = book;
+    public UserBook() {
+        
     }
 
-    public void setReadTo(int readTo) {
-        if (readTo > book.getPageCount()){
-            readTo = book.getPageCount();
+    public UserBook(String title, String author, double ISBN, Uri coverUri, int pageCount) {
+        super(title, author, ISBN, coverUri, pageCount);
+        Log.d("UserBook: ", "my superclass is "+this.getClass().getSuperclass());
+    }
+
+    public UserBook(Book book){
+        super(book.getTitle(), book.getAuthor(), book.getISBN(), book.getCoverUri(), book.getPageCount());
+
+    }
+
+    public void setReadTo(long readTo) {
+        if (readTo > getPageCount()){
+            readTo = getPageCount();
         }
         this.readTo = readTo;
     }
 
-    public int getReadTo() {
+    public long getReadTo() {
         return readTo;
     }
 

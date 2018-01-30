@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,17 +22,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import uk.co.beamsy.bookzap.bookzap.BookZap;
+import uk.co.beamsy.bookzap.bookzap.FirestoreControl;
 import uk.co.beamsy.bookzap.bookzap.model.Book;
 import uk.co.beamsy.bookzap.bookzap.R;
+import uk.co.beamsy.bookzap.bookzap.model.UserBook;
 import uk.co.beamsy.bookzap.bookzap.ui.BookCardAdaptor;
 import uk.co.beamsy.bookzap.bookzap.ui.RecyclerViewOnTouchItemListener;
 
-public class LibraryFragment extends Fragment {
+public class LibraryFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private RecyclerView recyclerView;
     private BookCardAdaptor bookAdaptor;
-    private List<Book> bookList;
+    private List<UserBook> bookList;
     private boolean isFabMenuOpen = false;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     public LibraryFragment(){
 
@@ -59,11 +63,16 @@ public class LibraryFragment extends Fragment {
         Log.d("LibraryFragment onCreateView", "Entry");
         final View rootView = inflator.inflate(R.layout.fragment_library, container, false);
         final BookZap mainActivity = (BookZap) getActivity();
+
+        swipeRefreshLayout = (SwipeRefreshLayout)rootView.findViewById(R.id.swiperefresh_lib);
+        swipeRefreshLayout.setOnRefreshListener(this);
+
         recyclerView = (RecyclerView)rootView.findViewById(R.id.library_recycler_view);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this.getContext(), 1);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(bookAdaptor);
+
         FloatingActionButton addMain = (FloatingActionButton)rootView.findViewById(R.id.fab_main);
         addMain.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,7 +119,7 @@ public class LibraryFragment extends Fragment {
                 new RecyclerViewOnTouchItemListener.OnTouchListener() {
             @Override
             public void onTap(View view, int adaptorPosition) {
-                Book book = mainActivity.getBookList().get(adaptorPosition);
+                UserBook book = mainActivity.getBookList().get(adaptorPosition);
                 BookFragment fragment = BookFragment.getInstance();
                 fragment.setBook(book);
                 mainActivity.changeFragment(fragment, "book");
@@ -131,7 +140,7 @@ public class LibraryFragment extends Fragment {
         return rootView;
     }
 
-    public void addCard(Book b) {
+    public void addCard(UserBook b) {
         Log.d("LibraryFragment addCard", "entry");
         bookList.add(b);
         bookAdaptor.notifyDataSetChanged();
@@ -151,7 +160,7 @@ public class LibraryFragment extends Fragment {
         containerLayout.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.fade_slide_out));
     }
 
-    public void setBookList(List<Book> bookList) {
+    public void setBookList(List<UserBook> bookList) {
         if (this.bookList == null) {
             this.bookList = new ArrayList<>();
             bookAdaptor = new BookCardAdaptor(this.getContext(), this.bookList, true);
@@ -159,5 +168,16 @@ public class LibraryFragment extends Fragment {
         this.bookList.clear();
         this.bookList.addAll(bookList);
         bookAdaptor.notifyDataSetChanged();
+    }
+
+    public void refresh() {
+        swipeRefreshLayout.setRefreshing(true);
+        setBookList(FirestoreControl.getInstance().getBookPage(0));
+        swipeRefreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void onRefresh() {
+        refresh();
     }
 }

@@ -1,6 +1,7 @@
 package uk.co.beamsy.bookzap.bookzap;
 
 import android.support.annotation.NonNull;
+import android.util.ArrayMap;
 import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -21,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import uk.co.beamsy.bookzap.bookzap.model.Book;
+import uk.co.beamsy.bookzap.bookzap.model.UserBook;
 
 /**
  * Created by bea17007261 on 23/01/2018.
@@ -34,10 +36,18 @@ public class FirestoreControl {
     private FirebaseFirestore db;
     private FirebaseUser currentUser;
     private Query firstBookPage;
+    private static FirestoreControl fs;
+    public String USER_BOOK_DATA_FAVOURITE = "favourite";
+    public String USER_BOOK_DATA_READ = "completed";
+    public String USER_BOOK_DATA_PROGRESS = "progress";
 
-    public static FirestoreControl getInstance(FirebaseUser _currentUser) {
-        FirestoreControl fs = new FirestoreControl();
+    public static FirestoreControl makeInstance(FirebaseUser _currentUser) {
+        fs = new FirestoreControl();
         fs.init(_currentUser);
+        return fs;
+    }
+
+    public static FirestoreControl getInstance() {
         return fs;
     }
 
@@ -63,27 +73,38 @@ public class FirestoreControl {
 
     }
 
-    public List<Book> getBookPage(int pointer) {
-        final List<Book> bookPage = new ArrayList<>();
+    public List<UserBook> getBookPage(int pointer) {
+        final List<UserBook> bookPage = new ArrayList<>();
         firstBookPage
             .get()
-            .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
-                public void onSuccess(QuerySnapshot documentSnapshots) {
-                        for (final DocumentSnapshot userBook : documentSnapshots) {
-                            db.collection("books").document(userBook.getId())
-                                .get()
-                                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                    @Override
-                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                        Book book = documentSnapshot.toObject(Book.class);
-                                        book.setRead((boolean) userBook.get("completed"));
-                                        book.setReadTo((int) userBook.get("progress"));
-                                        book.setFavourite((boolean) userBook.get("favourite"));
-                                        bookPage.add(book);
-                                    }
-                                });
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        for (final DocumentSnapshot userBook : task.getResult()) {
+                            db.collection("books").document(String.valueOf(userBook.getId()))
+                                    .get()
+                                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
 
+                                            Log.d("FireControl: ", "task complete");
+                                            if (task.isSuccessful()) {
+
+                                                Book book = task.getResult().toObject(Book.class);
+                                                UserBook uBook = new UserBook(book);
+                                                uBook.setRead((boolean) userBook.get("completed"));
+                                                uBook.setReadTo((long) userBook.get("progress"));
+                                                uBook.setFavourite((boolean) userBook.get("favourite"));
+                                                bookPage.add(uBook);
+                                            } else {
+                                                Log.d("Firecontrol: ", task.getException().getMessage());
+                                            }
+                                        }
+                                    });
+                        }
+                    } else {
+                        Log.d("FireControl: ", task.getException().getMessage());
                     }
                 }
             });
@@ -92,9 +113,31 @@ public class FirestoreControl {
 
     //public
 
-    public void addBook (Book book) {
+    public void addBook (UserBook book) {
         String isbn = String.format("%.0f", book.getISBN());
         booksRef.document(isbn).set(book).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    Log.d("FireControl","It worked");
+                }else{
+                    Log.d("FireControl","It didn't" + task.getException().getMessage());
+                }
+            }
+        });
+    }
+
+    public void modifyBook(){
+
+    }
+
+    public void modifyUserBookData(UserBook uBook) {
+        ArrayMap<String, Object> aM = new ArrayMap<>();
+        String isbn = String.format("%.0f", uBook.getISBN());
+        aM.put(USER_BOOK_DATA_FAVOURITE, uBook.isFavourite());
+        aM.put(USER_BOOK_DATA_PROGRESS, uBook.getReadTo());
+        aM.put(USER_BOOK_DATA_READ, uBook.isRead());
+        userBooksRef.document(isbn).set(aM).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {

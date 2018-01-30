@@ -19,6 +19,7 @@ import java.util.List;
 
 import uk.co.beamsy.bookzap.bookzap.model.Book;
 import uk.co.beamsy.bookzap.bookzap.R;
+import uk.co.beamsy.bookzap.bookzap.model.UserBook;
 
 /**
  * Created by jake on 15/11/17.
@@ -27,7 +28,7 @@ import uk.co.beamsy.bookzap.bookzap.R;
 public class BookCardAdaptor extends RecyclerView.Adapter<BookCardAdaptor.RecyclerCardViewHolder> {
 
     private Context context;
-    private List<Book> bookList;
+    private List<UserBook> bookList;
     private boolean isLibrary;
 
 
@@ -59,7 +60,7 @@ public class BookCardAdaptor extends RecyclerView.Adapter<BookCardAdaptor.Recycl
 
     @Override
     public void onBindViewHolder(final RecyclerCardViewHolder holder, int position) {
-        Book book = bookList.get(position);
+        UserBook book = bookList.get(position);
         holder.bookTitle.setText(book.getTitle());
         holder.authorName.setText(book.getAuthor());
         Glide
@@ -73,7 +74,7 @@ public class BookCardAdaptor extends RecyclerView.Adapter<BookCardAdaptor.Recycl
         if (!isLibrary) {
             holder.progressLayout.setVisibility(View.GONE);
         } else {
-            holder.progressRead.setProgress(((book.getReadTo()/book.getPageCount())*100));
+            holder.progressRead.setProgress(((int)(book.getReadTo()/book.getPageCount())*100));
             holder.progressText.setText(book.getReadTo()+"/"+book.getPageCount());
         }
     }
@@ -83,7 +84,7 @@ public class BookCardAdaptor extends RecyclerView.Adapter<BookCardAdaptor.Recycl
         return bookList.size();
     }
 
-    public BookCardAdaptor(Context context, List<Book> bookList, boolean isLibrary){
+    public BookCardAdaptor(Context context, List<UserBook> bookList, boolean isLibrary){
         this.context = context;
         this.bookList = bookList;
         this.isLibrary = isLibrary;
