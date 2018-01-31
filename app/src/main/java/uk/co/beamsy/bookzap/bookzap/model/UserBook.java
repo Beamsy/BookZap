@@ -17,7 +17,6 @@ public class UserBook extends Book {
 
     public UserBook(String title, String author, double ISBN, Uri coverUri, int pageCount) {
         super(title, author, ISBN, coverUri, pageCount);
-        Log.d("UserBook: ", "my superclass is "+this.getClass().getSuperclass());
     }
 
     public UserBook(Book book){

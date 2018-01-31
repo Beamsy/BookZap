@@ -14,6 +14,7 @@ public class Book {
     private long pageCount = 0;
     private double ISBN;
     private Uri coverUri;
+    private String coverUriString;
 
     public Book() {}
 
@@ -46,7 +47,14 @@ public class Book {
     }
 
     public Uri getCoverUri() {
+        if(coverUri == null) {
+            coverUri = Uri.parse(coverUriString);
+        }
         return coverUri;
+    }
+
+    public String getCoverUriString() {
+        return coverUriString;
     }
 
 }

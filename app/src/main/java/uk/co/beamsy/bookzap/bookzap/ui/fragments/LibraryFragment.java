@@ -18,8 +18,11 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 
+import com.google.android.gms.tasks.Tasks;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import uk.co.beamsy.bookzap.bookzap.BookZap;
 import uk.co.beamsy.bookzap.bookzap.FirestoreControl;
@@ -27,9 +30,10 @@ import uk.co.beamsy.bookzap.bookzap.model.Book;
 import uk.co.beamsy.bookzap.bookzap.R;
 import uk.co.beamsy.bookzap.bookzap.model.UserBook;
 import uk.co.beamsy.bookzap.bookzap.ui.BookCardAdaptor;
+import uk.co.beamsy.bookzap.bookzap.ui.BookListListener;
 import uk.co.beamsy.bookzap.bookzap.ui.RecyclerViewOnTouchItemListener;
 
-public class LibraryFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class LibraryFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, BookListListener {
 
     private RecyclerView recyclerView;
     private BookCardAdaptor bookAdaptor;
@@ -113,13 +117,12 @@ public class LibraryFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 }
             }
         });
-        //TODO: Implement OnItemTouchLogic
         recyclerView.addOnItemTouchListener(new RecyclerViewOnTouchItemListener(
                 this.getContext(), recyclerView,
                 new RecyclerViewOnTouchItemListener.OnTouchListener() {
             @Override
             public void onTap(View view, int adaptorPosition) {
-                UserBook book = mainActivity.getBookList().get(adaptorPosition);
+                UserBook book = bookList.get(adaptorPosition);
                 BookFragment fragment = BookFragment.getInstance();
                 fragment.setBook(book);
                 mainActivity.changeFragment(fragment, "book");
@@ -130,10 +133,6 @@ public class LibraryFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
             }
         }));
-
-
-        Log.d("LibraryFragment onCreateView", "Exit");
-
         mainActivity.changeDrawerBack(false);
         mainActivity.setTitle("Library");
         setBookList(mainActivity.getBookList());
@@ -141,7 +140,6 @@ public class LibraryFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
     public void addCard(UserBook b) {
-        Log.d("LibraryFragment addCard", "entry");
         bookList.add(b);
         bookAdaptor.notifyDataSetChanged();
     }
@@ -172,8 +170,25 @@ public class LibraryFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     public void refresh() {
         swipeRefreshLayout.setRefreshing(true);
-        setBookList(FirestoreControl.getInstance().getBookPage(0));
+        bookList.clear();
+        FirestoreControl.getInstance().getBookPage(this);
         swipeRefreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void onBookListFetch(List<UserBook> userBooks) {
+        setBookList(userBooks);
+        ((BookZap)getActivity()).setBookList(userBooks);
+    }
+
+    @Override
+    public void addBookToList(UserBook userBook) {
+        bookList.add(userBook);
+    }
+
+    @Override
+    public void completeAddition() {
+        setBookList(bookList);
     }
 
     @Override

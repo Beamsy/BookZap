@@ -223,12 +223,15 @@ public class BookZap extends AppCompatActivity {
 
     public void postLogin() {
         FirestoreControl fs = FirestoreControl.makeInstance(currentUser);
-        fs.getBookPage(0);
         changeFragment(libraryFragment, "library");
     }
 
     public List<UserBook> getBookList() {
         return bookList;
+    }
+
+    public void setBookList(List<UserBook> bookList) {
+        this.bookList = bookList;
     }
 }
 
