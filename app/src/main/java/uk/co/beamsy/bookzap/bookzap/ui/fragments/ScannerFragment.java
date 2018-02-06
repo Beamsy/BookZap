@@ -28,13 +28,18 @@ import uk.co.beamsy.bookzap.bookzap.R;
 public class ScannerFragment extends Fragment {
     private SurfaceView cameraView;
     private TextView barcodeInfo;
+    private static ScannerFragment fragment;
+
 
     public ScannerFragment() {
 
     }
 
     public static ScannerFragment getInstance() {
-        return new ScannerFragment();
+        if (fragment == null){
+            fragment = new ScannerFragment();
+        }
+        return fragment;
     }
 
     @Override

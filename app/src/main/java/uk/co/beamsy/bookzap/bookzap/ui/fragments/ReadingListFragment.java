@@ -17,22 +17,25 @@ import uk.co.beamsy.bookzap.bookzap.R;
 import uk.co.beamsy.bookzap.bookzap.model.Book;
 import uk.co.beamsy.bookzap.bookzap.model.UserBook;
 import uk.co.beamsy.bookzap.bookzap.ui.BookCardAdaptor;
+import uk.co.beamsy.bookzap.bookzap.ui.RecyclerViewOnTouchItemListener;
 
 public class ReadingListFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private BookCardAdaptor bookAdaptor;
     private List<UserBook> bookList;
-    private boolean isFabMenuOpen = false;
+    private static ReadingListFragment readingListFragment;
 
     public ReadingListFragment(){
 
     }
 
     public static ReadingListFragment getInstance(){
-        ReadingListFragment ReadingListFragment = new ReadingListFragment();
-        ReadingListFragment.init();
-        return ReadingListFragment;
+        if (readingListFragment == null) {
+            readingListFragment = new ReadingListFragment();
+            readingListFragment.init();
+        }
+        return readingListFragment;
     }
 
     private void init() {
@@ -54,10 +57,26 @@ public class ReadingListFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(bookAdaptor);
-        BookZap mainActivity = (BookZap) getActivity();
+        final BookZap mainActivity = (BookZap) getActivity();
         mainActivity.changeDrawerBack(false);
         mainActivity.setTitle("Reading List");
         bookList.addAll(((BookZap)getActivity()).getBookList());
+        recyclerView.addOnItemTouchListener(new RecyclerViewOnTouchItemListener(
+                this.getContext(), recyclerView,
+                new RecyclerViewOnTouchItemListener.OnTouchListener() {
+                    @Override
+                    public void onTap(View view, int adaptorPosition) {
+                        UserBook book = bookList.get(adaptorPosition);
+                        BookFragment fragment = BookFragment.getInstance();
+                        fragment.setBook(book);
+                        mainActivity.changeFragment(fragment, "book");
+                    }
+
+                    @Override
+                    public void onHold(View view, int adaptorPosition) {
+
+                    }
+                }));
         return rootView;
     }
 

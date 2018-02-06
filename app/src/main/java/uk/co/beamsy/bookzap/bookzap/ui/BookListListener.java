@@ -9,6 +9,4 @@ import uk.co.beamsy.bookzap.bookzap.model.UserBook;
 
 public interface BookListListener {
     void onBookListFetch(List<UserBook> userBooks);
-    void addBookToList(UserBook userBook);
-    void completeAddition();
 }

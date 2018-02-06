@@ -20,6 +20,8 @@ import android.support.v7.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import uk.co.beamsy.bookzap.bookzap.BookZap;
 import uk.co.beamsy.bookzap.bookzap.FirestoreControl;
@@ -32,12 +34,17 @@ import uk.co.beamsy.bookzap.bookzap.model.UserBook;
 public class BookFragment extends Fragment {
     private UserBook book = new UserBook("Blank", "No_one", 0, Uri.parse("android.resource://uk.co.beamsy.bookzap.bookzap/" + R.drawable.ic_launcher_foreground), 1);
 
+    private static BookFragment bookFragment;
+
     public BookFragment(){
         //Required empty constructor
     }
 
     public static BookFragment getInstance() {
-        return new BookFragment();
+        if (bookFragment == null){
+            bookFragment = new BookFragment();
+        }
+        return bookFragment;
     }
 
     @Override
@@ -77,7 +84,8 @@ public class BookFragment extends Fragment {
             isRead.setVisibility(View.VISIBLE);
         }
         Log.d("Book: ", String.valueOf(book.isFavourite()));
-        progressRead.setProgress(((int)(book.getReadTo()/book.getPageCount())*100));
+        progressRead.setMax(((int) book.getPageCount()));
+        progressRead.setProgress(((int) book.getReadTo()));
         progressText.setText(book.getReadTo()+"/"+book.getPageCount());
         mainActivity.changeDrawerBack(true);
         mainActivity.setTitle(book.getTitle());
@@ -87,7 +95,7 @@ public class BookFragment extends Fragment {
 
     public void toggleFavourite(){
         book.setFavourite(!book.isFavourite());
-        FirestoreControl.getInstance().modifyUserBookData(book);
+        FirestoreControl.getInstance(FirebaseAuth.getInstance().getCurrentUser()).modifyUserBookData(book);
 
     }
 

@@ -39,6 +39,7 @@ public class BookZap extends AppCompatActivity {
     private FirebaseUser currentUser;
     private TextView logoutText;
     private List<UserBook> bookList = new ArrayList<>();
+    private Toolbar bookZapBar;
 
     @Override
     public void onStart() {
@@ -49,26 +50,20 @@ public class BookZap extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_zap);
 
+        //Setting up the user interface
         drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         drawerNav = (NavigationView)findViewById(R.id.nav_view);
         logoutText = (TextView) drawerNav.getHeaderView(0).findViewById(R.id.log_out);
-        logoutText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                auth.signOut();
-                LoginFragment loginFragment = LoginFragment.getInstance();
-                getFragmentManager().beginTransaction().replace(R.id.inner_frame, loginFragment).commit();
-            }
-        });
         TextView userText = (TextView)  drawerNav.getHeaderView(0).findViewById(R.id.user_greet);
-
-        Toolbar bookZapBar = (Toolbar) findViewById(R.id.bookZapBar);
+        bookZapBar = (Toolbar) findViewById(R.id.bookZapBar);
         setSupportActionBar(bookZapBar);
-        auth = FirebaseAuth.getInstance();
-        currentUser = auth.getCurrentUser();
+
+        //Setup ActionBarDrawerToggle object to control left navbar drawer
         drawerToggle = new ActionBarDrawerToggle(
                 this, drawerLayout, bookZapBar, R.string.drawer_open, R.string.drawer_close
         ){
@@ -80,19 +75,42 @@ public class BookZap extends AppCompatActivity {
                 invalidateOptionsMenu();
             }
         };
+
+        logoutText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                auth.signOut();
+
+                LoginFragment loginFragment = LoginFragment.getInstance();
+                getFragmentManager().beginTransaction().replace(R.id.inner_frame, loginFragment).commit();
+            }
+        });
+
+
+        //Auth and user objects to interact with the Firebase services
+        auth = FirebaseAuth.getInstance();
+        currentUser = auth.getCurrentUser();
+
+        //Create library fragment
         libraryFragment = LibraryFragment.getInstance();
 
+        /* Check if the currentUser object is null
+         * If it is not null then the load the library fragment
+         *
+         * If it is null, then there is no user logged in
+         * so the login fragment is loaded instead
+         */
         if (currentUser != null) {
             changeFragment(libraryFragment, "library");
             if (currentUser.getDisplayName() != null) {
                 userText.setText("Hello " + currentUser.getDisplayName());
-                fs = FirestoreControl.makeInstance(currentUser);
-                prepareData();
             }
+            fs = FirestoreControl.getInstance(currentUser);
+            //fs.getBookPage(libraryFragment);
         } else {
+            //Login fragment is created
             LoginFragment loginFragment = LoginFragment.getInstance();
             getFragmentManager().beginTransaction().replace(R.id.inner_frame, loginFragment).commit();
-
         }
         drawerToggle.setToolbarNavigationClickListener(new View.OnClickListener() {
             @Override
@@ -126,18 +144,10 @@ public class BookZap extends AppCompatActivity {
             }
         });
 
+
         drawerToggle.syncState();
 
 
-    }
-
-    private void prepareData(){
-        UserBook b = new UserBook("Oathbringer", "Brandon Sanderson", 9780575093331D, Uri.parse("android.resource://uk.co.beamsy.bookzap.bookzap/"+R.drawable.oath), 1242);
-        b.setRead(true);
-        b.setReadTo(1242);
-        bookList.add(b);
-        b = new UserBook("Leviathan Wakes", "James S. A. Corey", 9780316129084D, Uri.parse("android.resource://uk.co.beamsy.bookzap.bookzap/"+R.drawable.lev), 561);
-        bookList.add(b);
     }
 
     @Override
@@ -222,8 +232,12 @@ public class BookZap extends AppCompatActivity {
     }
 
     public void postLogin() {
-        FirestoreControl fs = FirestoreControl.makeInstance(currentUser);
+        FirestoreControl fs = FirestoreControl.getInstance(currentUser);
         changeFragment(libraryFragment, "library");
+    }
+
+    public void update() {
+        fs.getBookPage(libraryFragment);
     }
 
     public List<UserBook> getBookList() {

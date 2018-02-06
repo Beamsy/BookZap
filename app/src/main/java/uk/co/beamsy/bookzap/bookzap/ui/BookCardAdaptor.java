@@ -74,7 +74,8 @@ public class BookCardAdaptor extends RecyclerView.Adapter<BookCardAdaptor.Recycl
         if (!isLibrary) {
             holder.progressLayout.setVisibility(View.GONE);
         } else {
-            holder.progressRead.setProgress(((int)(book.getReadTo()/book.getPageCount())*100));
+            holder.progressRead.setMax((int)book.getPageCount());
+            holder.progressRead.setProgress((int)book.getReadTo());
             holder.progressText.setText(book.getReadTo()+"/"+book.getPageCount());
         }
     }

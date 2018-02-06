@@ -47,15 +47,11 @@ public class FirestoreControl {
     public String USER_BOOK_DATA_READ = "completed";
     public String USER_BOOK_DATA_PROGRESS = "progress";
 
-    public static FirestoreControl makeInstance(FirebaseUser _currentUser) {
-        fs = new FirestoreControl();
-        fs.init(_currentUser);
-        return fs;
-    }
 
-    public static FirestoreControl getInstance() {
+    public static FirestoreControl getInstance(FirebaseUser _currentUser) {
         if (fs == null) {
-            return makeInstance(FirebaseAuth.getInstance().getCurrentUser());
+            fs = new FirestoreControl();
+            fs.init(_currentUser);
         }
         return fs;
     }
@@ -85,13 +81,15 @@ public class FirestoreControl {
 
 
     public void getBookPage(BookListListener bookListListener) {
+        List<UserBook> bookList = new ArrayList<>();
         try {
-            bookListListener.onBookListFetch((new GetBookPageTask()).execute().get());
+            bookList = (List<UserBook>) (new GetBookPageTask()).execute().get();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
+        bookListListener.onBookListFetch(bookList);
     }
 
     private class GetBookPageTask extends  AsyncTask<Void, Void, List<UserBook>> {
