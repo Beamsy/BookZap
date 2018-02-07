@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,12 +24,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import uk.co.beamsy.bookzap.bookzap.model.UserBook;
+import uk.co.beamsy.bookzap.bookzap.ui.BookListListener;
 import uk.co.beamsy.bookzap.bookzap.ui.fragments.LibraryFragment;
 import uk.co.beamsy.bookzap.bookzap.ui.fragments.LoginFragment;
 import uk.co.beamsy.bookzap.bookzap.ui.fragments.ReadingListFragment;
 
 
-public class BookZap extends AppCompatActivity {
+public class BookZap extends AppCompatActivity implements BookListListener {
     private static String[] bookTitles = {"Leviathan's Wake", "Abbadon's Gate", "Absolution Gap"};
     private DrawerLayout drawerLayout;
     private NavigationView drawerNav;
@@ -40,6 +42,7 @@ public class BookZap extends AppCompatActivity {
     private TextView logoutText;
     private List<UserBook> bookList = new ArrayList<>();
     private Toolbar bookZapBar;
+    private ProgressBar loadingBar;
 
     @Override
     public void onStart() {
@@ -62,6 +65,7 @@ public class BookZap extends AppCompatActivity {
         TextView userText = (TextView)  drawerNav.getHeaderView(0).findViewById(R.id.user_greet);
         bookZapBar = (Toolbar) findViewById(R.id.bookZapBar);
         setSupportActionBar(bookZapBar);
+        loadingBar = (ProgressBar) findViewById(R.id.centre_load);
 
         //Setup ActionBarDrawerToggle object to control left navbar drawer
         drawerToggle = new ActionBarDrawerToggle(
@@ -143,11 +147,11 @@ public class BookZap extends AppCompatActivity {
                 return true;
             }
         });
-
-
         drawerToggle.syncState();
-
-
+        if (bookList.size() == 0) {
+            loadingBar.setVisibility(View.VISIBLE);
+        }
+        fs.getBookPage(this);
     }
 
     @Override
@@ -246,6 +250,13 @@ public class BookZap extends AppCompatActivity {
 
     public void setBookList(List<UserBook> bookList) {
         this.bookList = bookList;
+    }
+
+    @Override
+    public void onBookListFetch(List<UserBook> userBooks) {
+        setBookList(userBooks);
+        libraryFragment.setBookList(userBooks);
+        loadingBar.setVisibility(View.GONE);
     }
 }
 

@@ -141,7 +141,9 @@ public class LibraryFragment extends Fragment implements SwipeRefreshLayout.OnRe
         }));
         mainActivity.changeDrawerBack(false);
         mainActivity.setTitle("Library");
-        //mainActivity.update();
+//        if (bookList.size() == 0) {
+//            refresh();
+//        }
         return rootView;
     }
 
@@ -178,9 +180,8 @@ public class LibraryFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     public void refresh() {
         swipeRefreshLayout.setRefreshing(true);
-        bookList.clear();
         FirestoreControl.getInstance(FirebaseAuth.getInstance().getCurrentUser()).getBookPage(this);
-        swipeRefreshLayout.setRefreshing(false);
+
     }
 
     @Override
@@ -188,6 +189,7 @@ public class LibraryFragment extends Fragment implements SwipeRefreshLayout.OnRe
         setBookList(userBooks);
         BookZap mainActivity = (BookZap)getActivity();
         mainActivity.setBookList(userBooks);
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override

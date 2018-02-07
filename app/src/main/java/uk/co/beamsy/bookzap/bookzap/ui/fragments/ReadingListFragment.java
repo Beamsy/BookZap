@@ -60,7 +60,13 @@ public class ReadingListFragment extends Fragment {
         final BookZap mainActivity = (BookZap) getActivity();
         mainActivity.changeDrawerBack(false);
         mainActivity.setTitle("Reading List");
-        bookList.addAll(((BookZap)getActivity()).getBookList());
+        List<UserBook> tempBookList = ((BookZap) getActivity()).getBookList();
+        for(int i = 0; i < tempBookList.size(); i++){
+            if (tempBookList.get(i).isFavourite()) {
+                bookList.add(tempBookList.get(i));
+            }
+        }
+        bookAdaptor.notifyDataSetChanged();
         recyclerView.addOnItemTouchListener(new RecyclerViewOnTouchItemListener(
                 this.getContext(), recyclerView,
                 new RecyclerViewOnTouchItemListener.OnTouchListener() {

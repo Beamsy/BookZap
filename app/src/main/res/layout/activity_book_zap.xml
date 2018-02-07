@@ -30,6 +30,15 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="56dp"
             />
+
+        <ProgressBar
+            android:id="@+id/centre_load"
+            style="@style/Widget.AppCompat.ProgressBar"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:indeterminate="true"
+            android:visibility="gone" />
     </android.widget.FrameLayout>
 
     <android.support.design.widget.NavigationView

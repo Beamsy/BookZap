@@ -81,18 +81,12 @@ public class FirestoreControl {
 
 
     public void getBookPage(BookListListener bookListListener) {
-        List<UserBook> bookList = new ArrayList<>();
-        try {
-            bookList = (List<UserBook>) (new GetBookPageTask()).execute().get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        bookListListener.onBookListFetch(bookList);
+        (new GetBookPageTask()).execute(bookListListener);
     }
 
-    private class GetBookPageTask extends  AsyncTask<Void, Void, List<UserBook>> {
+    private class GetBookPageTask extends  AsyncTask<BookListListener, Void, List<UserBook>> {
+
+        private BookListListener listener;
 
         private QuerySnapshot getUserData() throws ExecutionException, InterruptedException {
             return Tasks.await(firstBookPage.get()
@@ -122,11 +116,12 @@ public class FirestoreControl {
 
         @Override
         protected void onPostExecute(List<UserBook> userBooks) {
-
+                listener.onBookListFetch(userBooks);
         }
 
         @Override
-        protected List<UserBook> doInBackground(Void... voids) {
+        protected List<UserBook> doInBackground(BookListListener... listeners) {
+            listener = listeners[0];
            try {
                return getUsersBooks(getUserData());
            } catch (ExecutionException e) {
