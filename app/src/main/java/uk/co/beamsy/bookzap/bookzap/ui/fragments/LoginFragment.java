@@ -1,11 +1,14 @@
 package uk.co.beamsy.bookzap.bookzap.ui.fragments;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -20,7 +23,7 @@ import uk.co.beamsy.bookzap.bookzap.R;
 
 
 public class LoginFragment extends Fragment {
-
+    private ConstraintLayout constraintLayout;
     private boolean isInCreate = false;
     public LoginFragment() {
     }
@@ -36,6 +39,7 @@ public class LoginFragment extends Fragment {
         final View rootView = inflater.inflate(R.layout.fragment_login, container, false);
         BookZap mainActivity = (BookZap) getActivity();
         mainActivity.hideHome();
+        constraintLayout = (ConstraintLayout) rootView.findViewById(R.id.outer_login_layout);
         TextView createLink = (TextView) rootView.findViewById(R.id.text_account_create_link);
         createLink.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -50,6 +54,8 @@ public class LoginFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (isInCreate) {
+                    InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(constraintLayout.getWindowToken(), 0);
                     leaveCreate();
                 }
             }
@@ -58,6 +64,8 @@ public class LoginFragment extends Fragment {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(constraintLayout.getWindowToken(), 0);
                 if (isInCreate) {
                     createAccount();
                 } else {

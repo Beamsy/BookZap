@@ -31,7 +31,6 @@ import uk.co.beamsy.bookzap.bookzap.ui.fragments.ReadingListFragment;
 
 
 public class BookZap extends AppCompatActivity implements BookListListener {
-    private static String[] bookTitles = {"Leviathan's Wake", "Abbadon's Gate", "Absolution Gap"};
     private DrawerLayout drawerLayout;
     private NavigationView drawerNav;
     private ActionBarDrawerToggle drawerToggle;
@@ -43,6 +42,7 @@ public class BookZap extends AppCompatActivity implements BookListListener {
     private List<UserBook> bookList = new ArrayList<>();
     private Toolbar bookZapBar;
     private ProgressBar loadingBar;
+    private Boolean isLoggedIn;
 
     @Override
     public void onStart() {
@@ -84,7 +84,7 @@ public class BookZap extends AppCompatActivity implements BookListListener {
             @Override
             public void onClick(View v) {
                 auth.signOut();
-
+                drawerLayout.closeDrawers();
                 LoginFragment loginFragment = LoginFragment.getInstance();
                 getFragmentManager().beginTransaction().replace(R.id.inner_frame, loginFragment).commit();
             }
@@ -105,6 +105,7 @@ public class BookZap extends AppCompatActivity implements BookListListener {
          * so the login fragment is loaded instead
          */
         if (currentUser != null) {
+            isLoggedIn = true;
             changeFragment(libraryFragment, "library");
             if (currentUser.getDisplayName() != null) {
                 userText.setText("Hello " + currentUser.getDisplayName());
@@ -113,6 +114,7 @@ public class BookZap extends AppCompatActivity implements BookListListener {
             //fs.getBookPage(libraryFragment);
         } else {
             //Login fragment is created
+            isLoggedIn = false;
             LoginFragment loginFragment = LoginFragment.getInstance();
             getFragmentManager().beginTransaction().replace(R.id.inner_frame, loginFragment).commit();
         }
@@ -148,10 +150,12 @@ public class BookZap extends AppCompatActivity implements BookListListener {
             }
         });
         drawerToggle.syncState();
-        if (bookList.size() == 0) {
-            loadingBar.setVisibility(View.VISIBLE);
+        if(isLoggedIn) {
+            if (bookList.size() == 0) {
+                loadingBar.setVisibility(View.VISIBLE);
+            }
+            fs.getBookPage(this);
         }
-        fs.getBookPage(this);
     }
 
     @Override
@@ -190,12 +194,6 @@ public class BookZap extends AppCompatActivity implements BookListListener {
         }
 
     }
-
-    private void selectItem(int position) {
-        Toast.makeText(this, bookTitles[position], Toast.LENGTH_SHORT).show();
-    }
-
-
 
     public void changeFragment(Fragment fragment, String tag) {
         FragmentManager fragmentManager = getFragmentManager();
@@ -236,8 +234,11 @@ public class BookZap extends AppCompatActivity implements BookListListener {
     }
 
     public void postLogin() {
-        FirestoreControl fs = FirestoreControl.getInstance(currentUser);
+        loadingBar.setVisibility(View.VISIBLE);
+        fs = FirestoreControl.getInstance(currentUser);
         changeFragment(libraryFragment, "library");
+        isLoggedIn = true;
+        fs.getBookPage(this);
     }
 
     public void update() {
