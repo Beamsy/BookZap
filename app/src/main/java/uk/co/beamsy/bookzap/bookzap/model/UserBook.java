@@ -15,12 +15,14 @@ public class UserBook extends Book {
         
     }
 
-    public UserBook(String title, String author, double ISBN, Uri coverUri, int pageCount) {
-        super(title, author, ISBN, coverUri, pageCount);
+    public UserBook(String title, String author, double ISBN, Uri coverUri, int pageCount,
+                    String googleId) {
+        super(title, author, ISBN, coverUri, pageCount, googleId);
     }
 
     public UserBook(Book book){
-        super(book.getTitle(), book.getAuthor(), book.getISBN(), book.getCoverUri(), book.getPageCount());
+        super(book.getTitle(), book.getAuthor(), book.getISBN(), book.getCoverUri(),
+                book.getPageCount(), book.getGoogleBooksId());
 
     }
 

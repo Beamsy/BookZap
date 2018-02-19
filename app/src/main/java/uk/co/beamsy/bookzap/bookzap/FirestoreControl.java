@@ -60,7 +60,8 @@ public class FirestoreControl {
     private void init(FirebaseUser _currentUser) {
         this.currentUser = _currentUser;
         db = FirebaseFirestore.getInstance();
-        db.collection("user").document(currentUser.getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        db.collection("user").document(currentUser.getUid()).get().addOnSuccessListener(
+            new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if (documentSnapshot == null) {

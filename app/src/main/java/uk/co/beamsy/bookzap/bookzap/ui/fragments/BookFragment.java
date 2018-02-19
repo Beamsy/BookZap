@@ -32,7 +32,9 @@ import uk.co.beamsy.bookzap.bookzap.model.UserBook;
 
 
 public class BookFragment extends Fragment {
-    private UserBook book = new UserBook("Blank", "No_one", 0, Uri.parse("android.resource://uk.co.beamsy.bookzap.bookzap/" + R.drawable.ic_launcher_foreground), 1);
+    private UserBook book = new UserBook("Blank", "No_one", 0,
+            Uri.parse("android.resource://uk.co.beamsy.bookzap.bookzap/"
+                    + R.drawable.ic_launcher_foreground), 1, "test");
 
     private static BookFragment bookFragment;
 

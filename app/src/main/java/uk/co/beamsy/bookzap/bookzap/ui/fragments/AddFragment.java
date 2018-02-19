@@ -180,9 +180,9 @@ public class AddFragment extends Fragment {
             if (item.getString("kind").equals("books#volume")
                 && (item.getJSONObject("volumeInfo").has("printType") && item.getJSONObject("volumeInfo").getString("printType").equals("BOOK") )
                 && (item.getJSONObject("volumeInfo").has("language") && item.getJSONObject("volumeInfo").getString("language").equals("en") )
-                && item.getJSONObject("volumeInfo").has("pageCount")
                 && item.getJSONObject("volumeInfo").has("industryIdentifiers")
-                && (item.getJSONObject("volumeInfo").has("imageLinks") && item.getJSONObject("volumeInfo").getJSONObject("imageLinks").has("thumbnail"))) {
+                && (item.getJSONObject("volumeInfo").has("imageLinks") && item.getJSONObject("volumeInfo").getJSONObject("imageLinks").has("thumbnail"))
+                && item.getJSONObject("volumeInfo").has("authors")) {
                 searchBookList.add(jsonToBook(item));
             }
         }
@@ -190,7 +190,7 @@ public class AddFragment extends Fragment {
     }
 
     private UserBook jsonToBook(JSONObject bookObject) throws JSONException{
-        Double isbn = 0d;
+        double isbn = 0d;
         JSONArray jA = bookObject.getJSONObject("volumeInfo").getJSONArray("industryIdentifiers");
         for (int i = 0; i < jA.length(); i++) {
             if (jA.getJSONObject(i).getString("type").equals("ISBN_13")) {
@@ -198,12 +198,19 @@ public class AddFragment extends Fragment {
                 break;
             }
         }
+        int pageCount;
+        if (!bookObject.getJSONObject("volumeInfo").has("pageCount")){
+            pageCount = 0;
+        } else {
+            pageCount = bookObject.getJSONObject("volumeInfo").getInt("pageCount");
+        }
         UserBook book = new UserBook(
                 bookObject.getJSONObject("volumeInfo").getString("title"),
                 bookObject.getJSONObject("volumeInfo").getJSONArray("authors").getString(0),
                 isbn,
                 Uri.parse(bookObject.getJSONObject("volumeInfo").getJSONObject("imageLinks").getString("thumbnail").replace("&edge=curl","")),
-                bookObject.getJSONObject("volumeInfo").getInt("pageCount")
+                pageCount,
+                bookObject.getString("id")
         );
         return book;
     }
