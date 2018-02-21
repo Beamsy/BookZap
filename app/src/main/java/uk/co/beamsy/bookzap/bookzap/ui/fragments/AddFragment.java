@@ -210,7 +210,8 @@ public class AddFragment extends Fragment {
                 isbn,
                 Uri.parse(bookObject.getJSONObject("volumeInfo").getJSONObject("imageLinks").getString("thumbnail").replace("&edge=curl","")),
                 pageCount,
-                bookObject.getString("id")
+                bookObject.getString("id"),
+                bookObject.getJSONObject("volumeInfo").getString("description")
         );
         return book;
     }

@@ -4,7 +4,9 @@ import android.app.Fragment;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.ActionMenuView;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -34,7 +36,8 @@ import uk.co.beamsy.bookzap.bookzap.model.UserBook;
 public class BookFragment extends Fragment {
     private UserBook book = new UserBook("Blank", "No_one", 0,
             Uri.parse("android.resource://uk.co.beamsy.bookzap.bookzap/"
-                    + R.drawable.ic_launcher_foreground), 1, "test");
+                    + R.drawable.ic_launcher_foreground), 1,
+                "test", "TODO");
 
     private static BookFragment bookFragment;
 
@@ -58,7 +61,6 @@ public class BookFragment extends Fragment {
         bookBar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                Log.d("Menu: ", "clicked");
                 switch (item.getItemId()) {
                     case R.id.menu_favourite:
                         Log.d("Menu: ", "favourite");
@@ -80,17 +82,22 @@ public class BookFragment extends Fragment {
                 .apply(RequestOptions.fitCenterTransform())
                 .into(bookCover);
         TextView progressText = (TextView)rootView.findViewById(R.id.progress_read_text);
-        ProgressBar progressRead = (ProgressBar)rootView.findViewById(R.id.progress_read);
+
         TextView isRead = (TextView)rootView.findViewById(R.id.is_read_text);
         if (book.isRead()) {
             isRead.setVisibility(View.VISIBLE);
         }
-        Log.d("Book: ", String.valueOf(book.isFavourite()));
+
+        ProgressBar progressRead = (ProgressBar)rootView.findViewById(R.id.progress_read);
         progressRead.setMax(((int) book.getPageCount()));
         progressRead.setProgress(((int) book.getReadTo()));
         progressText.setText(book.getReadTo()+"/"+book.getPageCount());
+
         mainActivity.changeDrawerBack(true);
         mainActivity.setTitle(book.getTitle());
+        TextView description = (TextView) rootView.findViewById(R.id.book_description);
+        description.setMovementMethod(new ScrollingMovementMethod());
+        description.setText(book.getDescription());
         return rootView;
     }
 

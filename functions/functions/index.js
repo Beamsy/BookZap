@@ -14,7 +14,7 @@ const WEBHOOK_URL = 'https://requestb.in/vq2568vq';
         .onCreate(event => {
             var newBook = event.data.data();
             
-            //if (newBook.ISBN == null || newBook.coverUriString == null || newBook.pageCount == null || newBook.title == null || newBook.author == null) {
+            (newBook.ISBN == null || newBook.coverUriString == null || newBook.pageCount == null || newBook.title == null || newBook.author == null) {
                 return request({
                     uri: WEBHOOK_URL,
                     method: 'POST',
@@ -25,7 +25,7 @@ const WEBHOOK_URL = 'https://requestb.in/vq2568vq';
                     if (response.statusCode >= 400) {
                       throw new Error(`HTTP Error: ${response.statusCode}`);
                     }
-                    return console.log('SUCCESS! Posted', event.data.ref);
+
                 });
-            //}
+            }
     });

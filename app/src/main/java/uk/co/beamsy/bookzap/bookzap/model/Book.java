@@ -16,18 +16,20 @@ public class Book {
     private Uri coverUri;
     private String coverUriString;
     private String googleBooksId;
+    private String description;
 
     //Necessary blank constructor for object creation using Firestore document to object conversion
     public Book() {}
 
     public Book(String title, String author, double ISBN, Uri coverUri, long pageCount,
-                String googleId) {
+                String googleId, String description) {
         this.title = title;
         this.author = author;
         this.ISBN = ISBN;
         this.coverUri = coverUri;
         this.pageCount = pageCount;
         this.googleBooksId = googleId;
+        this.description = description;
     }
 
     public void setCoverUri(String coverUri) {
@@ -64,4 +66,9 @@ public class Book {
     public String getGoogleBooksId() {
         return googleBooksId;
     }
+
+    public String getDescription () {
+        return description;
+    }
+
 }
