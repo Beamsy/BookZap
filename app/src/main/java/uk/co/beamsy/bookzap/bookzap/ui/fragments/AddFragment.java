@@ -181,7 +181,7 @@ public class AddFragment extends Fragment {
             if (item.getString("kind").equals("books#volume")
                 && (item.getJSONObject("volumeInfo").has("printType") && item.getJSONObject("volumeInfo").getString("printType").equals("BOOK") )
                 && (item.getJSONObject("volumeInfo").has("language") && item.getJSONObject("volumeInfo").getString("language").equals("en") )
-                && item.getJSONObject("volumeInfo").has("industryIdentifiers")
+                && item.getJSONObject("volumeInfo").has("industryIdentifiers") && item.getJSONObject("volumeInfo").has("description")
                 && (item.getJSONObject("volumeInfo").has("imageLinks") && item.getJSONObject("volumeInfo").getJSONObject("imageLinks").has("thumbnail"))
                 && item.getJSONObject("volumeInfo").has("authors")) {
                 searchBookList.add(jsonToBook(item));

@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import uk.co.beamsy.bookzap.bookzap.BookZap;
 import uk.co.beamsy.bookzap.bookzap.FirestoreControl;
@@ -114,6 +115,11 @@ public class BookFragment extends Fragment {
     }
 
     public void addToLibrary(){
+        try {
 
+            FirestoreControl.getInstance(FirebaseAuth.getInstance().getCurrentUser()).addBookToLibrary(book);
+        } catch (FirebaseFirestoreException e) {
+            e.printStackTrace();
+        }
     }
 }

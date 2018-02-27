@@ -6,6 +6,7 @@ import android.util.ArrayMap;
 import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
@@ -14,6 +15,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -76,8 +78,41 @@ public class FirestoreControl {
 
     }
 
-    public void isBookPresent(Book book) {
+    private void isBookPresent(Book book) throws FirebaseFirestoreException {
+        final Book _book = book;
+        booksRef.whereEqualTo("ISBN", book.getISBN()).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot documentSnapshots) {
+                boolean isPresent = documentSnapshots.isEmpty();
+                if (isPresent) {
+                    return;
+                } else {
+                    booksRef.document(_book.getISBNAsString()).set(_book).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if(task.isComplete() && ! task.isSuccessful()) {
+                                Log.d("isBP", task.getException().getMessage());
+                            }
+                        }
+                    });
+                    return;
+                }
+            }
+        });
+    }
 
+    public void addBookToLibrary(UserBook userBook) throws FirebaseFirestoreException {
+        isBookPresent(userBook);
+        HashMap<String, Object> hM = new HashMap<String, Object>();
+        hM.put("completed", userBook.isRead());
+        hM.put("favourite", userBook.isFavourite());
+        hM.put("progress", userBook.getReadTo());
+        userBooksRef.document(userBook.getISBNAsString()).set(hM).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("addB2L", e.getMessage());
+            }
+        });
     }
 
     public void getBookPage(BookListListener bookListListener) {
@@ -200,8 +235,8 @@ public class FirestoreControl {
     //public
 
     public void addBook (UserBook book) {
-        String isbn = String.format("%.0f", book.getISBN());
-        booksRef.document(isbn).set(book).addOnCompleteListener(new OnCompleteListener<Void>() {
+
+        booksRef.document(book.getISBNAsString()).set(book).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {

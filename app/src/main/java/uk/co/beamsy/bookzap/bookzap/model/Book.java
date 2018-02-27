@@ -66,4 +66,8 @@ public class Book {
         return description;
     }
 
+    public String getISBNAsString () {
+        return String.format("%.0f", ISBN);
+    }
+
 }
