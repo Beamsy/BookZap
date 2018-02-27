@@ -83,11 +83,11 @@ public class FirestoreControl {
         booksRef.whereEqualTo("ISBN", book.getISBN()).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot documentSnapshots) {
-                boolean isPresent = documentSnapshots.isEmpty();
+                boolean isPresent = !documentSnapshots.isEmpty();
                 if (isPresent) {
                     return;
                 } else {
-                    booksRef.document(_book.getISBNAsString()).set(_book).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    booksRef.document(_book.getISBNAsString()).set(_book.getCleanBookMap()).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if(task.isComplete() && ! task.isSuccessful()) {
@@ -144,6 +144,7 @@ public class FirestoreControl {
                 uBook.setRead((boolean) dSnapshot.get("completed"));
                 uBook.setReadTo((long) dSnapshot.get("progress"));
                 uBook.setFavourite((boolean) dSnapshot.get("favourite"));
+                uBook.setInLibrary(true);
                 userBookList.add(uBook);
             }
             return userBookList;
@@ -167,72 +168,6 @@ public class FirestoreControl {
            return null;
         }
     }
-
- /*   private class GetBookPageTask extends AsyncTask<Void, Void, List<UserBook>> {
-        private BookListListener listener;
-        private final List<UserBook> userBookList;
-
-
-        protected GetBookPageTask(BookListListener bookListListener) {
-            this.listener = bookListListener;
-            userBookList = new ArrayList<>();
-        }
-
-        @Override
-        protected List<UserBook> doInBackground(Void... v) {
-            try {
-                Tasks.await(firstBookPage
-                        .get()
-                        .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                            @Override
-                            public void onSuccess(QuerySnapshot documentSnapshots) {
-                                for (final DocumentSnapshot userBook:documentSnapshots) {
-
-                                    try {
-                                        snapshot = Tasks.await(
-                                        db.collection("books").document(String.valueOf(userBook.getId()))
-                                                .get()
-                                                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                                    @Override
-                                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-
-                                                    }
-                                                }));
-                                    } catch (ExecutionException e) {
-                                        e.printStackTrace();
-                                    } catch (InterruptedException e) {
-                                        e.printStackTrace();
-                                    }
-                                        Book book = snapshot.toObject(Book.class);
-                                        UserBook uBook = new UserBook(book);
-                                        uBook.setRead((boolean) userBook.get("completed"));
-                                        uBook.setReadTo((long) userBook.get("progress"));
-                                        uBook.setFavourite((boolean) userBook.get("favourite"));
-                                        userBookList.add(uBook);
-                                        listener.addBookToList(uBook);
-                                }
-                                listener.completeAddition();
-                            }
-                        }));
-                return userBookList;
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(List<UserBook> userBooks) {
-            Log.d("oPostE", "");
-            //listener.onBookListFetch(userBooks);
-        }
-
-
-    }*/
-    //public
 
     public void addBook (UserBook book) {
 

@@ -206,6 +206,9 @@ public class BookZap extends AppCompatActivity implements BookListListener {
     }
 
     public void changeDrawerBack(boolean direction) {
+        //This appears to be redundant code duplication, but the order of method invocation is
+        //necessary.
+
         if (direction) {
             drawerToggle.setDrawerIndicatorEnabled(!direction);
             getSupportActionBar().setHomeButtonEnabled(direction);

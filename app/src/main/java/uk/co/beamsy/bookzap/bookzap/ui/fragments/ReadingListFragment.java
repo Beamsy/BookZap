@@ -60,7 +60,7 @@ public class ReadingListFragment extends Fragment {
         mainActivity.setTitle("Reading List");
         List<UserBook> tempBookList = ((BookZap) getActivity()).getBookList();
         for(int i = 0; i < tempBookList.size(); i++){
-            if (tempBookList.get(i).isFavourite()) {
+            if (tempBookList.get(i).isFavourite() && !bookList.contains(tempBookList.get(i))) {
                 bookList.add(tempBookList.get(i));
             }
         }
