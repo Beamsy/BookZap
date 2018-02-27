@@ -2,11 +2,6 @@ package uk.co.beamsy.bookzap.bookzap.model;
 
 import android.net.Uri;
 
-import java.net.URI;
-
-/**
- * Created by jake on 15/11/17.
- */
 
 public class Book {
     private String title;

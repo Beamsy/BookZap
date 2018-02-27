@@ -14,14 +14,12 @@ import java.util.List;
 
 import uk.co.beamsy.bookzap.bookzap.BookZap;
 import uk.co.beamsy.bookzap.bookzap.R;
-import uk.co.beamsy.bookzap.bookzap.model.Book;
 import uk.co.beamsy.bookzap.bookzap.model.UserBook;
 import uk.co.beamsy.bookzap.bookzap.ui.BookCardAdaptor;
 import uk.co.beamsy.bookzap.bookzap.ui.RecyclerViewOnTouchItemListener;
 
 public class ReadingListFragment extends Fragment {
 
-    private RecyclerView recyclerView;
     private BookCardAdaptor bookAdaptor;
     private List<UserBook> bookList;
     private static ReadingListFragment readingListFragment;
@@ -52,7 +50,7 @@ public class ReadingListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflator, ViewGroup container,
                              Bundle savedInstanceState) {
         final View rootView = inflator.inflate(R.layout.fragment_reading_list, container, false);
-        recyclerView = (RecyclerView)rootView.findViewById(R.id.reading_list_recycler_view);
+        RecyclerView recyclerView = rootView.findViewById(R.id.reading_list_recycler_view);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this.getContext(), 1);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());

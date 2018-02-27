@@ -3,7 +3,6 @@ package uk.co.beamsy.bookzap.bookzap;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.res.Configuration;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -15,7 +14,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -38,9 +36,7 @@ public class BookZap extends AppCompatActivity implements BookListListener {
     private FirebaseAuth auth;
     private FirestoreControl fs;
     private FirebaseUser currentUser;
-    private TextView logoutText;
     private List<UserBook> bookList = new ArrayList<>();
-    private Toolbar bookZapBar;
     private ProgressBar loadingBar;
     private Boolean isLoggedIn;
 
@@ -59,13 +55,13 @@ public class BookZap extends AppCompatActivity implements BookListListener {
         setContentView(R.layout.activity_book_zap);
 
         //Setting up the user interface
-        drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
-        drawerNav = (NavigationView)findViewById(R.id.nav_view);
-        logoutText = (TextView) drawerNav.getHeaderView(0).findViewById(R.id.log_out);
-        TextView userText = (TextView)  drawerNav.getHeaderView(0).findViewById(R.id.user_greet);
-        bookZapBar = (Toolbar) findViewById(R.id.bookZapBar);
+        drawerLayout = findViewById(R.id.drawer_layout);
+        drawerNav = findViewById(R.id.nav_view);
+        TextView logoutText = drawerNav.getHeaderView(0).findViewById(R.id.log_out);
+        TextView userText = drawerNav.getHeaderView(0).findViewById(R.id.user_greet);
+        Toolbar bookZapBar = findViewById(R.id.bookZapBar);
         setSupportActionBar(bookZapBar);
-        loadingBar = (ProgressBar) findViewById(R.id.centre_load);
+        loadingBar = findViewById(R.id.centre_load);
 
         //Setup ActionBarDrawerToggle object to control left navbar drawer
         drawerToggle = new ActionBarDrawerToggle(

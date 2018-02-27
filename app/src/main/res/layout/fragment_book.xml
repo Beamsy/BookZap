@@ -1,156 +1,174 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:elevation="0dp"
-    tools:layout_editor_absoluteY="25dp">
-
-    <LinearLayout
-        android:id="@+id/linearLayout"
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top|start"
-        android:baselineAligned="false"
-        android:gravity="top"
-        android:orientation="horizontal"
-        android:visibility="visible"
-        app:layout_constraintBottom_toTopOf="@+id/frameLayout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="match_parent">
 
-        <android.support.constraint.ConstraintLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_margin="8dp"
-            android:layout_weight="1">
-
-            <ImageView
-                android:id="@+id/book_cover"
-                android:layout_width="match_parent"
-                android:layout_height="334dp"
-                android:contentDescription="@string/TODO"
-                android:cropToPadding="false"
-                android:maxHeight="350dp"
-                android:maxWidth="200dp"
-                android:minHeight="350dp"
-                android:minWidth="200dp"
-                android:scaleType="centerInside"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0"
-                app:srcCompat="@drawable/oath" />
-
-            <TextView
-                android:id="@+id/is_read_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="top|start"
-                android:layout_margin="5dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="12dp"
-                android:background="@drawable/ic_rounded_corner_read"
-                android:elevation="2dp"
-                android:paddingBottom="1dp"
-                android:paddingEnd="3dp"
-                android:paddingStart="3dp"
-                android:paddingTop="1dp"
-                android:text="@string/read"
-                android:textColor="@android:color/white"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="@+id/book_cover"
-                app:layout_constraintHorizontal_bias="0.18"
-                app:layout_constraintStart_toStartOf="@+id/book_cover"
-                app:layout_constraintTop_toTopOf="@+id/book_cover" />
-
-        </android.support.constraint.ConstraintLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginTop="10dp"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/book_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:text="@string/book_title"
-                android:textSize="24sp" />
-
-            <TextView
-                android:id="@+id/author_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:text="@string/author_name"
-                android:textAlignment="viewStart" />
+        <ScrollView
+            android:id="@+id/inner_scroll_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="56dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <android.support.constraint.ConstraintLayout
-                android:id="@+id/progress_layout"
+                android:id="@+id/inner_constraint_container"
                 android:layout_width="match_parent"
-                android:layout_height="56dp">
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@+id/book_toolbar"
+                app:layout_constraintTop_toTopOf="parent">
 
-                <ProgressBar
-                    android:id="@+id/progress_read"
-                    style="?android:attr/progressBarStyleHorizontal"
+                <LinearLayout
+                    android:id="@+id/linearLayout"
                     android:layout_width="match_parent"
-                    android:layout_height="18dp"
-                    android:layout_margin="8dp"
-                    android:layout_marginEnd="2dp"
-                    android:layout_marginStart="2dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|start"
+                    android:baselineAligned="false"
+                    android:gravity="top"
+                    android:orientation="horizontal"
+                    android:visibility="visible"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="1.0">
+
+                    <android.support.constraint.ConstraintLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:layout_weight="1">
+
+                        <ImageView
+                            android:id="@+id/book_cover"
+                            android:layout_width="match_parent"
+                            android:layout_height="334dp"
+                            android:contentDescription="@string/TODO"
+                            android:cropToPadding="false"
+                            android:maxHeight="350dp"
+                            android:maxWidth="200dp"
+                            android:minHeight="350dp"
+                            android:minWidth="200dp"
+                            android:scaleType="centerInside"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.0"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintVertical_bias="0.0"
+                            app:srcCompat="@drawable/oath" />
+
+                        <TextView
+                            android:id="@+id/is_read_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="top|start"
+                            android:layout_margin="5dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="12dp"
+                            android:background="@drawable/ic_rounded_corner_read"
+                            android:elevation="2dp"
+                            android:paddingBottom="1dp"
+                            android:paddingEnd="3dp"
+                            android:paddingStart="3dp"
+                            android:paddingTop="1dp"
+                            android:text="@string/read"
+                            android:textColor="@android:color/white"
+                            android:visibility="gone"
+                            app:layout_constraintEnd_toEndOf="@+id/book_cover"
+                            app:layout_constraintHorizontal_bias="0.18"
+                            app:layout_constraintStart_toStartOf="@+id/book_cover"
+                            app:layout_constraintTop_toTopOf="@+id/book_cover" />
+
+                    </android.support.constraint.ConstraintLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/book_title"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="8dp"
+                            android:text="@string/book_title"
+                            android:textSize="24sp" />
+
+                        <TextView
+                            android:id="@+id/author_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginStart="8dp"
+                            android:text="@string/author_name"
+                            android:textAlignment="viewStart" />
+
+                        <android.support.constraint.ConstraintLayout
+                            android:id="@+id/progress_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="56dp">
+
+                            <ProgressBar
+                                android:id="@+id/progress_read"
+                                style="?android:attr/progressBarStyleHorizontal"
+                                android:layout_width="match_parent"
+                                android:layout_height="18dp"
+                                android:layout_margin="8dp"
+                                android:layout_marginEnd="2dp"
+                                android:layout_marginStart="2dp"
+                                android:layout_marginTop="8dp"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <TextView
+                                android:id="@+id/progress_read_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="8dp"
+                                android:layout_marginTop="8dp"
+                                android:text="@string/book_progress"
+                                android:textSize="12sp"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="@+id/progress_read"
+                                app:layout_constraintTop_toBottomOf="@+id/progress_read" />
+
+                        </android.support.constraint.ConstraintLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
 
                 <TextView
-                    android:id="@+id/progress_read_text"
+                    android:id="@+id/book_description"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
-                    android:text="@string/book_progress"
-                    android:textSize="12sp"
+                    android:scrollbars="vertical"
+                    android:text="@string/TODO"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="@+id/progress_read"
-                    app:layout_constraintTop_toBottomOf="@+id/progress_read" />
-
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+                    app:layout_constraintVertical_bias="0.0" />
             </android.support.constraint.ConstraintLayout>
+        </ScrollView>
 
-        </LinearLayout>
 
-    </LinearLayout>
-
-    <FrameLayout
-        android:id="@+id/frameLayout"
-        android:layout_width="match_parent"
-        android:layout_height="245dp"
-        android:layout_above="@+id/book_toolbar"
-        android:layout_alignParentStart="true"
-        app:layout_constraintBottom_toTopOf="@+id/book_toolbar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
-
-        <TextView
-            android:id="@+id/book_description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scrollbars="vertical"
-            android:text="@string/TODO" />
-    </FrameLayout>
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/book_toolbar"
@@ -166,6 +184,8 @@
         android:theme="?android:attr/actionBarTheme"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent" />
-</android.support.constraint.ConstraintLayout>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/inner_scroll_container"
+        app:layout_constraintVertical_bias="1.0" />
+
+</RelativeLayout>

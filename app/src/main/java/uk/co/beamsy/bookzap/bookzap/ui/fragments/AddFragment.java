@@ -1,7 +1,6 @@
 package uk.co.beamsy.bookzap.bookzap.ui.fragments;
 
 import android.app.Activity;
-import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -42,10 +41,8 @@ import uk.co.beamsy.bookzap.bookzap.ui.RecyclerViewOnTouchItemListener;
 public class AddFragment extends Fragment {
 
     private static AddFragment fragment;
-    private RecyclerView recyclerView;
     private BookCardAdaptor bookAdaptor;
     private List<UserBook> searchBookList;
-    private Button searchButton;
     private boolean isSearched;
     private static String SEARCH_ISBN = "isbn";
     private static String SEARCH_TITLE = "intitle";
@@ -80,16 +77,16 @@ public class AddFragment extends Fragment {
     public View onCreateView(LayoutInflater inflator, ViewGroup container,
                              Bundle savedInstanceState) {
         final View rootView = inflator.inflate(R.layout.fragment_add, container, false);
-        constraintLayout = (ConstraintLayout)rootView.findViewById(R.id.search_constraint_layout);
-        recyclerView = (RecyclerView)rootView.findViewById(R.id.search_recycler_view);
+        constraintLayout = rootView.findViewById(R.id.search_constraint_layout);
+        RecyclerView recyclerView = rootView.findViewById(R.id.search_recycler_view);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this.getContext(), 1);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(bookAdaptor);
-        titleText = (EditText)rootView.findViewById(R.id.add_title_edit);
-        authorText = (EditText)rootView.findViewById(R.id.add_author_edit);
-        isbnText = (EditText)rootView.findViewById(R.id.add_isbn_edit);
-        searchButton = (Button)rootView.findViewById(R.id.add_search_button);
+        titleText = rootView.findViewById(R.id.add_title_edit);
+        authorText = rootView.findViewById(R.id.add_author_edit);
+        isbnText = rootView.findViewById(R.id.add_isbn_edit);
+        Button searchButton = rootView.findViewById(R.id.add_search_button);
         toggleView();
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,7 +100,11 @@ public class AddFragment extends Fragment {
                     isSearched = true;
                     toggleView();
                     InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(constraintLayout.getWindowToken(), 0);
+                    try {
+                        imm.hideSoftInputFromWindow(constraintLayout.getWindowToken(), 0);
+                    } catch (NullPointerException e) {
+                        Log.e("Add: ", "keyboard hide failed");
+                    }
                 } else {
                     searchBookList.clear();
                     bookAdaptor.notifyDataSetChanged();
@@ -204,7 +205,7 @@ public class AddFragment extends Fragment {
         } else {
             pageCount = bookObject.getJSONObject("volumeInfo").getInt("pageCount");
         }
-        UserBook book = new UserBook(
+        return new UserBook(
                 bookObject.getJSONObject("volumeInfo").getString("title"),
                 bookObject.getJSONObject("volumeInfo").getJSONArray("authors").getString(0),
                 isbn,
@@ -213,7 +214,6 @@ public class AddFragment extends Fragment {
                 bookObject.getString("id"),
                 bookObject.getJSONObject("volumeInfo").getString("description")
         );
-        return book;
     }
 
 }

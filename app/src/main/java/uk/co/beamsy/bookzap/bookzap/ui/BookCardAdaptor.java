@@ -1,8 +1,6 @@
 package uk.co.beamsy.bookzap.bookzap.ui;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,7 +15,6 @@ import com.bumptech.glide.request.RequestOptions;
 
 import java.util.List;
 
-import uk.co.beamsy.bookzap.bookzap.model.Book;
 import uk.co.beamsy.bookzap.bookzap.R;
 import uk.co.beamsy.bookzap.bookzap.model.UserBook;
 
@@ -27,7 +24,6 @@ import uk.co.beamsy.bookzap.bookzap.model.UserBook;
 
 public class BookCardAdaptor extends RecyclerView.Adapter<BookCardAdaptor.RecyclerCardViewHolder> {
 
-    private Context context;
     private List<UserBook> bookList;
     private boolean isLibrary;
 
@@ -39,13 +35,13 @@ public class BookCardAdaptor extends RecyclerView.Adapter<BookCardAdaptor.Recycl
         public ConstraintLayout progressLayout;
         public RecyclerCardViewHolder(View vi){
             super(vi);
-            this.bookTitle = (TextView)vi.findViewById(R.id.book_title);
-            this.authorName = (TextView)vi.findViewById(R.id.author_name);
-            this.bookCover = (ImageView)vi.findViewById(R.id.book_cover);
-            this.isRead = (TextView)vi.findViewById(R.id.is_read_text);
-            this.progressText = (TextView)vi.findViewById(R.id.progress_read_text);
-            this.progressRead = (ProgressBar)vi.findViewById(R.id.progress_read);
-            this.progressLayout = (ConstraintLayout)vi.findViewById(R.id.progress_layout);
+            this.bookTitle = vi.findViewById(R.id.book_title);
+            this.authorName = vi.findViewById(R.id.author_name);
+            this.bookCover = vi.findViewById(R.id.book_cover);
+            this.isRead = vi.findViewById(R.id.is_read_text);
+            this.progressText = vi.findViewById(R.id.progress_read_text);
+            this.progressRead = vi.findViewById(R.id.progress_read);
+            this.progressLayout = vi.findViewById(R.id.progress_layout);
         }
     }
 
@@ -86,7 +82,7 @@ public class BookCardAdaptor extends RecyclerView.Adapter<BookCardAdaptor.Recycl
     }
 
     public BookCardAdaptor(Context context, List<UserBook> bookList, boolean isLibrary){
-        this.context = context;
+        Context context1 = context;
         this.bookList = bookList;
         this.isLibrary = isLibrary;
     }

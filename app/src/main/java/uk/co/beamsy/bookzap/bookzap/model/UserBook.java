@@ -2,10 +2,6 @@ package uk.co.beamsy.bookzap.bookzap.model;
 
 import android.net.Uri;
 
-/**
- * Created by BEA17007261 on 24/01/2018.
- */
-
 public class UserBook extends Book {
     private boolean isRead = false, isFavourite = false, inLibrary = false;
     private long readTo;
@@ -57,6 +53,6 @@ public class UserBook extends Book {
     }
 
     public void setInLibrary(boolean inLibrary) {
-        inLibrary = inLibrary;
+        this.inLibrary = inLibrary;
     }
 }

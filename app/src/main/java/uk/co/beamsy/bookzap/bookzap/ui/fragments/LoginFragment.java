@@ -39,8 +39,8 @@ public class LoginFragment extends Fragment {
         final View rootView = inflater.inflate(R.layout.fragment_login, container, false);
         BookZap mainActivity = (BookZap) getActivity();
         mainActivity.hideHome();
-        constraintLayout = (ConstraintLayout) rootView.findViewById(R.id.outer_login_layout);
-        TextView createLink = (TextView) rootView.findViewById(R.id.text_account_create_link);
+        constraintLayout = rootView.findViewById(R.id.outer_login_layout);
+        TextView createLink = rootView.findViewById(R.id.text_account_create_link);
         createLink.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -49,7 +49,7 @@ public class LoginFragment extends Fragment {
                 }
             }
         });
-        Button cancelButton = (Button) rootView.findViewById(R.id.button_cancel);
+        Button cancelButton = rootView.findViewById(R.id.button_cancel);
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -60,7 +60,7 @@ public class LoginFragment extends Fragment {
                 }
             }
         });
-        Button loginButton = (Button) rootView.findViewById(R.id.button_login);
+        Button loginButton = rootView.findViewById(R.id.button_login);
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

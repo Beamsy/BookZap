@@ -48,8 +48,8 @@ public class ScannerFragment extends Fragment {
         BookZap mainActivity = (BookZap) getActivity();
         mainActivity.setTitle("Scan a barcode");
         mainActivity.changeDrawerBack(true);
-        cameraView = (SurfaceView) rootView.findViewById(R.id.camera_view);
-        barcodeInfo = (TextView) rootView.findViewById(R.id.barcode_info);
+        cameraView = rootView.findViewById(R.id.camera_view);
+        barcodeInfo = rootView.findViewById(R.id.barcode_info);
 
 
         BarcodeDetector barcodeDetector = new BarcodeDetector.Builder(rootView.getContext())

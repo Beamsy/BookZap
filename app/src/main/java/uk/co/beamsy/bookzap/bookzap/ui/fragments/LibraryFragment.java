@@ -1,9 +1,7 @@
 package uk.co.beamsy.bookzap.bookzap.ui.fragments;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.Fragment;
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -12,24 +10,19 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 
-import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import uk.co.beamsy.bookzap.bookzap.BookZap;
 import uk.co.beamsy.bookzap.bookzap.FirestoreControl;
-import uk.co.beamsy.bookzap.bookzap.model.Book;
 import uk.co.beamsy.bookzap.bookzap.R;
 import uk.co.beamsy.bookzap.bookzap.model.UserBook;
 import uk.co.beamsy.bookzap.bookzap.ui.BookCardAdaptor;
@@ -39,7 +32,6 @@ import uk.co.beamsy.bookzap.bookzap.ui.RecyclerViewOnTouchItemListener;
 public class LibraryFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, BookListListener {
 
     private static LibraryFragment libraryFragment;
-    private RecyclerView recyclerView;
     private BookCardAdaptor bookAdaptor;
     private List<UserBook> bookList;
     private boolean isFabMenuOpen = false;
@@ -73,17 +65,17 @@ public class LibraryFragment extends Fragment implements SwipeRefreshLayout.OnRe
         final View rootView = inflator.inflate(R.layout.fragment_library, container, false);
         final BookZap mainActivity = (BookZap) getActivity();
 
-        swipeRefreshLayout = (SwipeRefreshLayout)rootView.findViewById(R.id.swiperefresh_lib);
+        swipeRefreshLayout = rootView.findViewById(R.id.swiperefresh_lib);
         swipeRefreshLayout.setOnRefreshListener(this);
 
-        recyclerView = (RecyclerView)rootView.findViewById(R.id.library_recycler_view);
+        RecyclerView recyclerView = rootView.findViewById(R.id.library_recycler_view);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this.getContext(), 1);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(bookAdaptor);
 
 
-        FloatingActionButton addMain = (FloatingActionButton)rootView.findViewById(R.id.fab_main);
+        FloatingActionButton addMain = rootView.findViewById(R.id.fab_main);
         addMain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View vi) {
@@ -94,7 +86,7 @@ public class LibraryFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 }
             }
         });
-        FloatingActionButton addScan = (FloatingActionButton)rootView.findViewById(R.id.fab_scan);
+        FloatingActionButton addScan = rootView.findViewById(R.id.fab_scan);
         addScan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View vi) {
@@ -112,7 +104,7 @@ public class LibraryFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 }
             }
         });
-        FloatingActionButton addManually = (FloatingActionButton)rootView.findViewById((R.id.fab_add));
+        FloatingActionButton addManually = rootView.findViewById((R.id.fab_add));
         addManually.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View vi) {
@@ -156,14 +148,14 @@ public class LibraryFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     private void showMenu(){
         isFabMenuOpen = true;
-        LinearLayout containerLayout = (LinearLayout)this.getActivity().findViewById(R.id.add_menu_layout);
+        LinearLayout containerLayout = this.getActivity().findViewById(R.id.add_menu_layout);
         containerLayout.setVisibility(View.VISIBLE);
         containerLayout.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.fade_slide_in));
     }
 
     private void closeMenu(){
         isFabMenuOpen = false;
-        LinearLayout containerLayout = (LinearLayout)this.getActivity().findViewById(R.id.add_menu_layout);
+        LinearLayout containerLayout = this.getActivity().findViewById(R.id.add_menu_layout);
         containerLayout.setVisibility(View.GONE);
         containerLayout.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.fade_slide_out));
     }

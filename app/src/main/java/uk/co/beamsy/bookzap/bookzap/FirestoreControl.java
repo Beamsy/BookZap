@@ -8,9 +8,7 @@ import android.util.Log;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -18,7 +16,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.Transaction;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,9 +40,9 @@ public class FirestoreControl {
     private FirebaseUser currentUser;
     private Query firstBookPage;
     private static FirestoreControl fs;
-    public String USER_BOOK_DATA_FAVOURITE = "favourite";
-    public String USER_BOOK_DATA_READ = "completed";
-    public String USER_BOOK_DATA_PROGRESS = "progress";
+    public static final String USER_BOOK_DATA_FAVOURITE = "favourite";
+    public static final String USER_BOOK_DATA_READ = "completed";
+    public static final String USER_BOOK_DATA_PROGRESS = "progress";
 
 
     public static FirestoreControl getInstance(FirebaseUser _currentUser) {
@@ -79,7 +76,9 @@ public class FirestoreControl {
 
     }
 
+    public void isBookPresent(Book book) {
 
+    }
 
     public void getBookPage(BookListListener bookListListener) {
         (new GetBookPageTask()).execute(bookListListener);
