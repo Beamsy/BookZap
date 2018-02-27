@@ -2,6 +2,7 @@ package uk.co.beamsy.bookzap.bookzap.ui.fragments;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -9,20 +10,27 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import uk.co.beamsy.bookzap.bookzap.BookZap;
+import uk.co.beamsy.bookzap.bookzap.FirestoreControl;
 import uk.co.beamsy.bookzap.bookzap.R;
 import uk.co.beamsy.bookzap.bookzap.model.UserBook;
 import uk.co.beamsy.bookzap.bookzap.ui.BookCardAdaptor;
+import uk.co.beamsy.bookzap.bookzap.ui.BookListListener;
 import uk.co.beamsy.bookzap.bookzap.ui.RecyclerViewOnTouchItemListener;
 
-public class ReadingListFragment extends Fragment {
+public class ReadingListFragment
+        extends Fragment
+        implements BookListListener, SwipeRefreshLayout.OnRefreshListener {
 
     private BookCardAdaptor bookAdaptor;
     private List<UserBook> bookList;
     private static ReadingListFragment readingListFragment;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     public ReadingListFragment(){
 
@@ -58,13 +66,7 @@ public class ReadingListFragment extends Fragment {
         final BookZap mainActivity = (BookZap) getActivity();
         mainActivity.changeDrawerBack(false);
         mainActivity.setTitle("Reading List");
-        List<UserBook> tempBookList = ((BookZap) getActivity()).getBookList();
-        for(int i = 0; i < tempBookList.size(); i++){
-            if (tempBookList.get(i).isFavourite() && !bookList.contains(tempBookList.get(i))) {
-                bookList.add(tempBookList.get(i));
-            }
-        }
-        bookAdaptor.notifyDataSetChanged();
+        updateDataSet();
         recyclerView.addOnItemTouchListener(new RecyclerViewOnTouchItemListener(
                 this.getContext(), recyclerView,
                 new RecyclerViewOnTouchItemListener.OnTouchListener() {
@@ -81,6 +83,8 @@ public class ReadingListFragment extends Fragment {
 
                     }
                 }));
+        swipeRefreshLayout = rootView.findViewById(R.id.reading_list_swiperefresh);
+        swipeRefreshLayout.setOnRefreshListener(this);
         return rootView;
     }
 
@@ -89,9 +93,33 @@ public class ReadingListFragment extends Fragment {
         bookAdaptor.notifyDataSetChanged();
     }
 
-    public void setBookList(List<UserBook> bookList) {
-        this.bookList.clear();
-        this.bookList.addAll(bookList);
+    private void updateDataSet() {
+        bookList.clear();
+        List<UserBook> tempBookList = ((BookZap) getActivity()).getBookList();
+        for(int i = 0; i < tempBookList.size(); i++){
+            if (tempBookList.get(i).isFavourite() && !bookList.contains(tempBookList.get(i))) {
+                bookList.add(tempBookList.get(i));
+            }
+        }
         bookAdaptor.notifyDataSetChanged();
+    }
+
+    public void refresh() {
+        swipeRefreshLayout.setRefreshing(true);
+        FirestoreControl.getInstance(FirebaseAuth.getInstance().getCurrentUser()).getBookPage(this);
+
+    }
+
+    @Override
+    public void onBookListFetch(List<UserBook> userBooks) {
+        BookZap mainActivity = (BookZap)getActivity();
+        mainActivity.setBookList(userBooks);
+        updateDataSet();
+        swipeRefreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void onRefresh() {
+        refresh();
     }
 }
