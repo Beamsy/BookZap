@@ -137,15 +137,19 @@ public class FirestoreControl {
             List<UserBook> userBookList = new ArrayList<>();
 
             for(DocumentSnapshot dSnapshot: documentSnapshots) {
-                Book book = Tasks.await(db.collection("books")
-                        .document(String.valueOf(dSnapshot.getId()))
-                        .get()).toObject(Book.class);
-                UserBook uBook = new UserBook(book);
-                uBook.setRead((boolean) dSnapshot.get("completed"));
-                uBook.setReadTo((long) dSnapshot.get("progress"));
-                uBook.setFavourite((boolean) dSnapshot.get("favourite"));
-                uBook.setInLibrary(true);
-                userBookList.add(uBook);
+                if (Tasks.await
+                        (db.collection("books").document(String.valueOf(dSnapshot.getId())).get())
+                        .exists()) {
+                    Book book = Tasks.await(db.collection("books")
+                            .document(String.valueOf(dSnapshot.getId()))
+                            .get()).toObject(Book.class);
+                    UserBook uBook = new UserBook(book);
+                    uBook.setRead((boolean) dSnapshot.get("completed"));
+                    uBook.setReadTo((long) dSnapshot.get("progress"));
+                    uBook.setFavourite((boolean) dSnapshot.get("favourite"));
+                    uBook.setInLibrary(true);
+                    userBookList.add(uBook);
+                }
             }
             return userBookList;
         }
