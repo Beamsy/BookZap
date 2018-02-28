@@ -172,7 +172,13 @@ public class LibraryFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     public void refresh() {
         swipeRefreshLayout.setRefreshing(true);
-        FirestoreControl.getInstance(FirebaseAuth.getInstance().getCurrentUser()).getBookPage(this);
+        if (bookList.size() != 0) {
+            FirestoreControl.getInstance(FirebaseAuth.getInstance().getCurrentUser())
+                    .getBookPage(this, bookList.get(bookList.size() - 1), FirestoreControl.SORT_TYPE_ISBN);
+        } else {
+            FirestoreControl.getInstance(FirebaseAuth.getInstance().getCurrentUser())
+                    .getFirstBookPage(this, FirestoreControl.SORT_TYPE_ISBN);
+        }
 
     }
 

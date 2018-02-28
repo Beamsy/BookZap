@@ -106,7 +106,8 @@ public class ReadingListFragment
 
     public void refresh() {
         swipeRefreshLayout.setRefreshing(true);
-        FirestoreControl.getInstance(FirebaseAuth.getInstance().getCurrentUser()).getBookPage(this);
+        FirestoreControl.getInstance(FirebaseAuth.getInstance().getCurrentUser())
+                .getBookPage(this, bookList.get(bookList.size()-1), FirestoreControl.SORT_TYPE_ISBN);
 
     }
 

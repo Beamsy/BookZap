@@ -66,6 +66,8 @@ public class BookCardAdaptor extends RecyclerView.Adapter<BookCardAdaptor.Recycl
                 .into(holder.bookCover);
         if (book.isRead()) {
             holder.isRead.setVisibility(View.VISIBLE);
+        } else {
+            holder.isRead.setVisibility(View.GONE);
         }
         if (!isLibrary) {
             holder.progressLayout.setVisibility(View.GONE);

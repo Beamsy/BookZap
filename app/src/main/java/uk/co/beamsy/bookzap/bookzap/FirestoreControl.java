@@ -1,6 +1,7 @@
 package uk.co.beamsy.bookzap.bookzap;
 
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.ArrayMap;
 import android.util.Log;
@@ -40,11 +41,19 @@ public class FirestoreControl {
     private DocumentReference userRef;
     private FirebaseFirestore db;
     private FirebaseUser currentUser;
-    private Query firstBookPage;
     private static FirestoreControl fs;
+
     public static final String USER_BOOK_DATA_FAVOURITE = "favourite";
     public static final String USER_BOOK_DATA_READ = "completed";
     public static final String USER_BOOK_DATA_PROGRESS = "progress";
+    public static final String USER_BOOK_DATA_LAST_READ = "last_read";
+
+    public static final int SORT_TYPE_ISBN = 0;
+    public static final int SORT_TYPE_ISBN_REVERSE = 1;
+    public static final int SORT_TYPE_TITLE = 2;
+    public static final int SORT_TYPE_TITLE_REVERSE = 3;
+    public static final int SORT_TYPE_LAST_READ = 4;
+    public static final int SORT_TYPE_LAST_READ_REVERSE = 5;
 
 
     public static FirestoreControl getInstance(FirebaseUser _currentUser) {
@@ -73,7 +82,6 @@ public class FirestoreControl {
         userRef = db.collection("user").document(currentUser.getUid());
         userBooksRef = userRef.collection("userBooksData");
         booksRef = db.collection("books");
-        firstBookPage  = userBooksRef.limit(25);
 
 
     }
@@ -104,9 +112,12 @@ public class FirestoreControl {
     public void addBookToLibrary(UserBook userBook) throws FirebaseFirestoreException {
         isBookPresent(userBook);
         HashMap<String, Object> hM = new HashMap<String, Object>();
-        hM.put("completed", userBook.isRead());
-        hM.put("favourite", userBook.isFavourite());
-        hM.put("progress", userBook.getReadTo());
+        hM.put("ISBN", userBook.getISBNAsString());
+        hM.put(USER_BOOK_DATA_READ, userBook.isRead());
+        hM.put(USER_BOOK_DATA_FAVOURITE, userBook.isFavourite());
+        hM.put(USER_BOOK_DATA_PROGRESS, userBook.getReadTo());
+        userBook.setLastReadToNow();
+        hM.put(USER_BOOK_DATA_LAST_READ, userBook.getLastRead());
         userBooksRef.document(userBook.getISBNAsString()).set(hM).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
@@ -115,16 +126,60 @@ public class FirestoreControl {
         });
     }
 
-    public void getBookPage(BookListListener bookListListener) {
-        (new GetBookPageTask()).execute(bookListListener);
+    public void getBookPage(BookListListener bookListListener, UserBook lastBook, int sortMethod) {
+
+        (new GetBookPageTask()).execute(new GetBookPageArguments(bookListListener, lastBook, sortMethod));
     }
 
-    private class GetBookPageTask extends  AsyncTask<BookListListener, Void, List<UserBook>> {
+    public void getFirstBookPage(BookListListener bookListListener, int sortMethod) {
+        (new GetBookPageTask()).execute(new GetBookPageArguments(bookListListener, null, sortMethod));
+    }
+
+    private class GetBookPageArguments {
+        private BookListListener bookListListener;
+        private UserBook lastBook;
+        private int sortMethod;
+
+        private GetBookPageArguments (BookListListener bookListListener, UserBook lastBook, int sortMethod) {
+            this.bookListListener = bookListListener;
+            this.lastBook = lastBook;
+            this.sortMethod = sortMethod;
+        }
+
+        public BookListListener getBookListListener() {
+            return bookListListener;
+        }
+
+        public UserBook getLastBook() {
+            return lastBook;
+        }
+
+        public int getSortMethod() {
+            return sortMethod;
+        }
+    }
+
+    private class GetBookPageTask extends  AsyncTask<GetBookPageArguments, Void, List<UserBook>> {
 
         private BookListListener listener;
+        private UserBook lastOfPrevious;
+        private int sortType;
 
         private QuerySnapshot getUserData() throws ExecutionException, InterruptedException {
-            return Tasks.await(firstBookPage.get()
+            Query page = userBooksRef;
+            switch (sortType) {
+                case SORT_TYPE_ISBN:
+                    page = userBooksRef.orderBy("ISBN");
+                    break;
+                case SORT_TYPE_ISBN_REVERSE:
+                    page = userBooksRef.orderBy("ISBN", Query.Direction.ASCENDING);
+                    break;
+                default:
+                    Log.d("ASync", "sortType not found");
+                    this.cancel(true);
+                    break;
+            }
+            return Tasks.await(page.limit(25).get()
                     .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                         @Override
                         public void onSuccess(QuerySnapshot documentSnapshots) {
@@ -135,7 +190,6 @@ public class FirestoreControl {
 
         private List<UserBook> getUsersBooks(QuerySnapshot documentSnapshots) throws ExecutionException, InterruptedException {
             List<UserBook> userBookList = new ArrayList<>();
-
             for(DocumentSnapshot dSnapshot: documentSnapshots) {
                 if (Tasks.await
                         (db.collection("books").document(String.valueOf(dSnapshot.getId())).get())
@@ -144,9 +198,9 @@ public class FirestoreControl {
                             .document(String.valueOf(dSnapshot.getId()))
                             .get()).toObject(Book.class);
                     UserBook uBook = new UserBook(book);
-                    uBook.setRead((boolean) dSnapshot.get("completed"));
-                    uBook.setReadTo((long) dSnapshot.get("progress"));
-                    uBook.setFavourite((boolean) dSnapshot.get("favourite"));
+                    uBook.setRead((boolean) dSnapshot.get(USER_BOOK_DATA_READ));
+                    uBook.setReadTo((long) dSnapshot.get(USER_BOOK_DATA_PROGRESS));
+                    uBook.setFavourite((boolean) dSnapshot.get(USER_BOOK_DATA_FAVOURITE));
                     uBook.setInLibrary(true);
                     userBookList.add(uBook);
                 }
@@ -160,16 +214,19 @@ public class FirestoreControl {
         }
 
         @Override
-        protected List<UserBook> doInBackground(BookListListener... listeners) {
-            listener = listeners[0];
-           try {
-               return getUsersBooks(getUserData());
-           } catch (ExecutionException e) {
+        protected List<UserBook> doInBackground(GetBookPageArguments... argumentsCollection) {
+            GetBookPageArguments arguments = argumentsCollection[0];
+            listener = arguments.getBookListListener();
+            lastOfPrevious = arguments.getLastBook();
+            sortType = arguments.getSortMethod();
+            try {
+                return getUsersBooks(getUserData());
+            } catch (ExecutionException e) {
                 e.printStackTrace();
-           } catch (InterruptedException e) {
+            } catch (InterruptedException e) {
                 e.printStackTrace();
-           }
-           return null;
+            }
+            return null;
         }
     }
 
@@ -197,6 +254,8 @@ public class FirestoreControl {
         aM.put(USER_BOOK_DATA_FAVOURITE, uBook.isFavourite());
         aM.put(USER_BOOK_DATA_PROGRESS, uBook.getReadTo());
         aM.put(USER_BOOK_DATA_READ, uBook.isRead());
+        aM.put("ISBN", uBook.getISBNAsString());
+        aM.put(USER_BOOK_DATA_LAST_READ, uBook.getLastRead());
         userBooksRef.document(isbn).set(aM).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {

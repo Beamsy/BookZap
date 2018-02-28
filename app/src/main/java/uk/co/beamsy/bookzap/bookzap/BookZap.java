@@ -150,7 +150,7 @@ public class BookZap extends AppCompatActivity implements BookListListener {
             if (bookList.size() == 0) {
                 loadingBar.setVisibility(View.VISIBLE);
             }
-            fs.getBookPage(this);
+            fs.getBookPage(this, null, FirestoreControl.SORT_TYPE_ISBN);
         }
     }
 
@@ -237,11 +237,11 @@ public class BookZap extends AppCompatActivity implements BookListListener {
         fs = FirestoreControl.getInstance(currentUser);
         changeFragment(libraryFragment, "library");
         isLoggedIn = true;
-        fs.getBookPage(this);
+        fs.getBookPage(this, null, FirestoreControl.SORT_TYPE_ISBN);
     }
 
     public void update() {
-        fs.getBookPage(libraryFragment);
+        fs.getBookPage(libraryFragment, bookList.get(bookList.size()-1), FirestoreControl.SORT_TYPE_ISBN);
     }
 
     public List<UserBook> getBookList() {

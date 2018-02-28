@@ -2,9 +2,13 @@ package uk.co.beamsy.bookzap.bookzap.model;
 
 import android.net.Uri;
 
+import java.time.Instant;
+import java.util.Date;
+
 public class UserBook extends Book {
     private boolean isRead = false, isFavourite = false, inLibrary = false;
     private long readTo;
+    private Date lastRead;
 
     public UserBook() {
         
@@ -28,12 +32,20 @@ public class UserBook extends Book {
         this.readTo = readTo;
     }
 
+    public void setLastReadToNow() {
+        lastRead = Date.from(Instant.now());
+    }
+
     public long getReadTo() {
         return readTo;
     }
 
     public boolean isRead() {
         return isRead;
+    }
+
+    public Date getLastRead () {
+        return lastRead;
     }
 
     public void setRead(boolean read) {
