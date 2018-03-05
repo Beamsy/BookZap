@@ -1,7 +1,7 @@
-package uk.co.beamsy.bookzap.bookzap.ui;
+package uk.co.beamsy.bookzap.ui;
 
 import java.util.List;
-import uk.co.beamsy.bookzap.bookzap.model.UserBook;
+import uk.co.beamsy.bookzap.model.UserBook;
 
 /**
  * Created by Jake on 31/01/2018.

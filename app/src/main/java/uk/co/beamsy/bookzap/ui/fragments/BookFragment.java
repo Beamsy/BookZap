@@ -1,6 +1,5 @@
-package uk.co.beamsy.bookzap.bookzap.ui.fragments;
+package uk.co.beamsy.bookzap.ui.fragments;
 
-import android.app.DialogFragment;
 import android.app.Fragment;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,18 +14,17 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
-import uk.co.beamsy.bookzap.bookzap.BookZap;
-import uk.co.beamsy.bookzap.bookzap.FirestoreControl;
+import uk.co.beamsy.bookzap.BookZap;
+import uk.co.beamsy.bookzap.FirestoreControl;
 import uk.co.beamsy.bookzap.bookzap.R;
-import uk.co.beamsy.bookzap.bookzap.model.UserBook;
-import uk.co.beamsy.bookzap.bookzap.ui.UpdateProgressDialog;
+import uk.co.beamsy.bookzap.model.UserBook;
+import uk.co.beamsy.bookzap.ui.UpdateProgressDialog;
 
 
 public class BookFragment extends Fragment implements UpdateProgressDialog.UpdateProgressListener {

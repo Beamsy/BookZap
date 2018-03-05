@@ -1,4 +1,4 @@
-package uk.co.beamsy.bookzap.bookzap.ui;
+package uk.co.beamsy.bookzap.ui;
 
 import android.app.Dialog;
 import android.app.DialogFragment;

@@ -4,7 +4,7 @@
     android:id="@+id/outer_login_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="uk.co.beamsy.bookzap.bookzap.ui.fragments.LoginFragment">
+    tools:context="uk.co.beamsy.bookzap.ui.fragments.LoginFragment">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/constraintLayout"

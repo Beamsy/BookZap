@@ -1,6 +1,7 @@
-package uk.co.beamsy.bookzap.bookzap.ui.fragments;
+package uk.co.beamsy.bookzap.ui.fragments;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -20,16 +21,16 @@ import com.google.android.gms.vision.barcode.BarcodeDetector;
 
 import java.io.IOException;
 
-import uk.co.beamsy.bookzap.bookzap.BookZap;
+import uk.co.beamsy.bookzap.BookZap;
 import uk.co.beamsy.bookzap.bookzap.R;
 
 
 
-public class ScannerFragment extends Fragment {
+public class ScannerFragment extends Fragment implements Detector.Processor<Barcode> {
     private SurfaceView cameraView;
     private TextView barcodeInfo;
     private static ScannerFragment fragment;
-
+    private CameraSource cameraSource;
 
     public ScannerFragment() {
 
@@ -53,16 +54,19 @@ public class ScannerFragment extends Fragment {
 
 
         BarcodeDetector barcodeDetector = new BarcodeDetector.Builder(rootView.getContext())
-                .setBarcodeFormats(Barcode.ISBN)
+                //.setBarcodeFormats(Barcode.ISBN)
                 .build();
+        barcodeDetector.setProcessor(this);
 
-        final CameraSource cameraSource = new CameraSource
+        cameraSource = new CameraSource
                 .Builder(rootView.getContext(), barcodeDetector)
+                .setFacing(CameraSource.CAMERA_FACING_BACK)
                 .setAutoFocusEnabled(true)
-                .setRequestedPreviewSize(250, 250)
+                .setRequestedPreviewSize(1600, 1600)
                 .build();
 
         cameraView.getHolder().addCallback(new SurfaceHolder.Callback() {
+            @SuppressLint("MissingPermission")
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
                 try {
@@ -84,25 +88,30 @@ public class ScannerFragment extends Fragment {
                 cameraSource.stop();
             }
         });
-        barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
-            @Override
-            public void release() {
-            cameraSource.release();
-            }
-
-            @Override
-            public void receiveDetections(Detector.Detections<Barcode> detections) {
-                final SparseArray<Barcode> barcodes = detections.getDetectedItems();
-                if (barcodes.size() != 0) {
-                    barcodeInfo.setText(barcodes.get(0).displayValue);
-                }
-            }
-        });
-
 
 
 
         return rootView;
     }
 
+    public void changeInfo (String newInfo) {
+        barcodeInfo.setText(newInfo);
+    }
+
+    @Override
+    public void release() {
+        cameraSource.release();
+    }
+
+    @Override
+    public void receiveDetections(Detector.Detections<Barcode> detections) {
+        if ( detections.getDetectedItems().size() > 0) {
+            Log.d("Barcode: ", "barcode detected!");
+        }
+        SparseArray<Barcode> detectedItems = detections.getDetectedItems();
+        for (int i = 0; i < detectedItems.size() ; i++) {
+            int key = detectedItems.keyAt(i);
+            Log.d("Barcode: ", detections.getDetectedItems().get(key).displayValue);
+        }
+    }
 }

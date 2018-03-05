@@ -1,4 +1,4 @@
-package uk.co.beamsy.bookzap.bookzap.ui.fragments;
+package uk.co.beamsy.bookzap.ui.fragments;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -18,7 +18,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 
-import uk.co.beamsy.bookzap.bookzap.BookZap;
+import uk.co.beamsy.bookzap.BookZap;
 import uk.co.beamsy.bookzap.bookzap.R;
 
 

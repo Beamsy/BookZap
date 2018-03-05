@@ -1,4 +1,4 @@
-package uk.co.beamsy.bookzap.bookzap.model;
+package uk.co.beamsy.bookzap.model;
 
 import android.support.annotation.Nullable;
 

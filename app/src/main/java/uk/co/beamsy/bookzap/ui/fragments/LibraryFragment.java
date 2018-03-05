@@ -1,4 +1,4 @@
-package uk.co.beamsy.bookzap.bookzap.ui.fragments;
+package uk.co.beamsy.bookzap.ui.fragments;
 
 import android.Manifest;
 import android.app.Fragment;
@@ -21,13 +21,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import java.util.ArrayList;
 import java.util.List;
 
-import uk.co.beamsy.bookzap.bookzap.BookZap;
-import uk.co.beamsy.bookzap.bookzap.FirestoreControl;
+import uk.co.beamsy.bookzap.BookZap;
+import uk.co.beamsy.bookzap.FirestoreControl;
 import uk.co.beamsy.bookzap.bookzap.R;
-import uk.co.beamsy.bookzap.bookzap.model.UserBook;
-import uk.co.beamsy.bookzap.bookzap.ui.BookCardAdaptor;
-import uk.co.beamsy.bookzap.bookzap.ui.BookListListener;
-import uk.co.beamsy.bookzap.bookzap.ui.RecyclerViewOnTouchItemListener;
+import uk.co.beamsy.bookzap.model.UserBook;
+import uk.co.beamsy.bookzap.ui.BookCardAdaptor;
+import uk.co.beamsy.bookzap.ui.BookListListener;
+import uk.co.beamsy.bookzap.ui.RecyclerViewOnTouchItemListener;
 
 public class LibraryFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, BookListListener {
 

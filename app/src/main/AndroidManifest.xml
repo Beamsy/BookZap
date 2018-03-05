@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="uk.co.beamsy.bookzap.bookzap">
+    package="uk.co.beamsy.bookzap">
 
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -14,10 +14,9 @@
         android:theme="@style/AppTheme"
         android:fullBackupContent="@xml/backup_descriptor">
 
-
         <meta-data android:name="com.google.android.gms.vision.DEPENDENCIES" android:value="barcode" />
 
-        <activity android:name=".BookZap">
+        <activity android:name="uk.co.beamsy.bookzap.BookZap">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

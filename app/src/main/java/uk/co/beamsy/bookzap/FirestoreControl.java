@@ -1,7 +1,6 @@
-package uk.co.beamsy.bookzap.bookzap;
+package uk.co.beamsy.bookzap;
 
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.ArrayMap;
 import android.util.Log;
@@ -26,9 +25,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-import uk.co.beamsy.bookzap.bookzap.model.Book;
-import uk.co.beamsy.bookzap.bookzap.model.UserBook;
-import uk.co.beamsy.bookzap.bookzap.ui.BookListListener;
+import uk.co.beamsy.bookzap.model.Book;
+import uk.co.beamsy.bookzap.model.UserBook;
+import uk.co.beamsy.bookzap.ui.BookListListener;
 
 /**
  * Created by bea17007261 on 23/01/2018.
@@ -174,6 +173,12 @@ public class FirestoreControl {
                 case SORT_TYPE_ISBN_REVERSE:
                     page = userBooksRef.orderBy("ISBN", Query.Direction.ASCENDING);
                     break;
+                case SORT_TYPE_LAST_READ:
+                    page = userBooksRef.orderBy(USER_BOOK_DATA_LAST_READ);
+                    break;
+                case SORT_TYPE_LAST_READ_REVERSE:
+                    page = userBooksRef.orderBy(USER_BOOK_DATA_LAST_READ, Query.Direction.ASCENDING);
+                    break;
                 default:
                     Log.d("ASync", "sortType not found");
                     this.cancel(true);
@@ -192,7 +197,7 @@ public class FirestoreControl {
             List<UserBook> userBookList = new ArrayList<>();
             for(DocumentSnapshot dSnapshot: documentSnapshots) {
                 if (Tasks.await
-                        (db.collection("books").document(String.valueOf(dSnapshot.getId())).get())
+                        (dSnapshot.getDocumentReference("book_ref").get())
                         .exists()) {
                     Book book = Tasks.await(db.collection("books")
                             .document(String.valueOf(dSnapshot.getId()))
@@ -250,21 +255,12 @@ public class FirestoreControl {
 
     public void modifyUserBookData(UserBook uBook) {
         ArrayMap<String, Object> aM = new ArrayMap<>();
-        String isbn = String.format("%.0f", uBook.getISBN());
         aM.put(USER_BOOK_DATA_FAVOURITE, uBook.isFavourite());
         aM.put(USER_BOOK_DATA_PROGRESS, uBook.getReadTo());
         aM.put(USER_BOOK_DATA_READ, uBook.isRead());
         aM.put("ISBN", uBook.getISBNAsString());
         aM.put(USER_BOOK_DATA_LAST_READ, uBook.getLastRead());
-        userBooksRef.document(isbn).set(aM).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    Log.d("FireControl","It worked");
-                }else{
-                    Log.d("FireControl","It didn't" + task.getException().getMessage());
-                }
-            }
-        });
+        aM.put("book_ref", booksRef.document(uBook.getISBNAsString()));
+        userBooksRef.document(uBook.getISBNAsString()).set(aM);
     }
 }

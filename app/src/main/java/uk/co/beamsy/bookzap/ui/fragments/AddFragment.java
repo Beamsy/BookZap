@@ -1,4 +1,4 @@
-package uk.co.beamsy.bookzap.bookzap.ui.fragments;
+package uk.co.beamsy.bookzap.ui.fragments;
 
 import android.app.Activity;
 import android.net.Uri;
@@ -31,11 +31,11 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import uk.co.beamsy.bookzap.bookzap.BookZap;
+import uk.co.beamsy.bookzap.BookZap;
 import uk.co.beamsy.bookzap.bookzap.R;
-import uk.co.beamsy.bookzap.bookzap.model.UserBook;
-import uk.co.beamsy.bookzap.bookzap.ui.BookCardAdaptor;
-import uk.co.beamsy.bookzap.bookzap.ui.RecyclerViewOnTouchItemListener;
+import uk.co.beamsy.bookzap.model.UserBook;
+import uk.co.beamsy.bookzap.ui.BookCardAdaptor;
+import uk.co.beamsy.bookzap.ui.RecyclerViewOnTouchItemListener;
 
 
 public class AddFragment extends Fragment {

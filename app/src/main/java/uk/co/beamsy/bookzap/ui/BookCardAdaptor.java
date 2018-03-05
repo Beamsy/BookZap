@@ -1,4 +1,4 @@
-package uk.co.beamsy.bookzap.bookzap.ui;
+package uk.co.beamsy.bookzap.ui;
 
 import android.content.Context;
 import android.support.constraint.ConstraintLayout;
@@ -16,7 +16,7 @@ import com.bumptech.glide.request.RequestOptions;
 import java.util.List;
 
 import uk.co.beamsy.bookzap.bookzap.R;
-import uk.co.beamsy.bookzap.bookzap.model.UserBook;
+import uk.co.beamsy.bookzap.model.UserBook;
 
 /**
  * Created by jake on 15/11/17.

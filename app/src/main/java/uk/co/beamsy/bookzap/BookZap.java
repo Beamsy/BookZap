@@ -1,4 +1,4 @@
-package uk.co.beamsy.bookzap.bookzap;
+package uk.co.beamsy.bookzap;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -21,11 +21,12 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.ArrayList;
 import java.util.List;
 
-import uk.co.beamsy.bookzap.bookzap.model.UserBook;
-import uk.co.beamsy.bookzap.bookzap.ui.BookListListener;
-import uk.co.beamsy.bookzap.bookzap.ui.fragments.LibraryFragment;
-import uk.co.beamsy.bookzap.bookzap.ui.fragments.LoginFragment;
-import uk.co.beamsy.bookzap.bookzap.ui.fragments.ReadingListFragment;
+import uk.co.beamsy.bookzap.bookzap.R;
+import uk.co.beamsy.bookzap.model.UserBook;
+import uk.co.beamsy.bookzap.ui.BookListListener;
+import uk.co.beamsy.bookzap.ui.fragments.LibraryFragment;
+import uk.co.beamsy.bookzap.ui.fragments.LoginFragment;
+import uk.co.beamsy.bookzap.ui.fragments.ReadingListFragment;
 
 
 public class BookZap extends AppCompatActivity implements BookListListener {
