@@ -17,28 +17,18 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import uk.co.beamsy.bookzap.BookZap;
 import uk.co.beamsy.bookzap.R;
+import uk.co.beamsy.bookzap.connections.GoogleBooksConnection;
 import uk.co.beamsy.bookzap.model.UserBook;
 import uk.co.beamsy.bookzap.ui.BookCardAdaptor;
 import uk.co.beamsy.bookzap.ui.RecyclerViewOnTouchItemListener;
 
 
-public class AddFragment extends Fragment {
+public class AddFragment extends Fragment implements GoogleBooksConnection.SearchResultListener {
 
     private static AddFragment fragment;
     private BookCardAdaptor bookAdaptor;
@@ -96,7 +86,7 @@ public class AddFragment extends Fragment {
                     searchTerms.put(SEARCH_ISBN, isbnText.getText().toString());
                     searchTerms.put(SEARCH_AUTHOR, authorText.getText().toString());
                     searchTerms.put(SEARCH_TITLE, titleText.getText().toString());
-                    populate(searchTerms);
+                    GoogleBooksConnection.search(searchTerms, getContext(), fragment);
                     isSearched = true;
                     toggleView();
                     InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
@@ -143,77 +133,10 @@ public class AddFragment extends Fragment {
         }
     }
 
-    private void populate(ArrayMap<String, String> searchTerms) {
-        RequestQueue queue = Volley.newRequestQueue(this.getContext());
-        String Url = "https://www.googleapis.com/books/v1/volumes?q=";
-        for(int i = 0; i < searchTerms.size(); i++) {
-            if (!searchTerms.valueAt(i).isEmpty()){
-                Url = Url + searchTerms.keyAt(i) + ":" + searchTerms.valueAt(i) + "+";
-            }
-        }
-        final String fUrl = Url.replaceAll(" ", "%20");
-        Log.d ("URL: " ,fUrl);
-        JsonObjectRequest jORequest = new JsonObjectRequest(Request.Method.GET, fUrl, null, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                try {
-                    Log.d("URL: ", fUrl);
-                    apiAdaptor(response);
-                } catch (JSONException e) {
-                    Log.e("A/F", "onResponse: ", e);
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("Search Volley", error.getLocalizedMessage());
-            }
-        });
-        queue.add(jORequest);
-        bookAdaptor.notifyDataSetChanged();
-    }
-
-    private void apiAdaptor(JSONObject apiResponse) throws JSONException {
-        JSONArray items = apiResponse.getJSONArray("items");
+    @Override
+    public void onSearchResult(ArrayList<UserBook> userBooks) {
         searchBookList.clear();
-        for (int i = 0; i < items.length();i++) {
-            JSONObject item = items.getJSONObject(i);
-            if (item.getString("kind").equals("books#volume")
-                && (item.getJSONObject("volumeInfo").has("printType") && item.getJSONObject("volumeInfo").getString("printType").equals("BOOK") )
-                && (item.getJSONObject("volumeInfo").has("language") && item.getJSONObject("volumeInfo").getString("language").equals("en") )
-                && item.getJSONObject("volumeInfo").has("industryIdentifiers") && item.getJSONObject("volumeInfo").has("description")
-                && (item.getJSONObject("volumeInfo").has("imageLinks") && item.getJSONObject("volumeInfo").getJSONObject("imageLinks").has("thumbnail"))
-                && item.getJSONObject("volumeInfo").has("authors")) {
-                searchBookList.add(jsonToBook(item));
-            }
-        }
+        searchBookList.addAll(userBooks);
         bookAdaptor.notifyDataSetChanged();
     }
-
-    private UserBook jsonToBook(JSONObject bookObject) throws JSONException{
-        double isbn = 0d;
-        JSONArray jA = bookObject.getJSONObject("volumeInfo").getJSONArray("industryIdentifiers");
-        for (int i = 0; i < jA.length(); i++) {
-            if (jA.getJSONObject(i).getString("type").equals("ISBN_13")) {
-                isbn = jA.getJSONObject(i).getDouble("identifier");
-                break;
-            }
-        }
-        int pageCount;
-        if (!bookObject.getJSONObject("volumeInfo").has("pageCount")){
-            pageCount = 0;
-        } else {
-            pageCount = bookObject.getJSONObject("volumeInfo").getInt("pageCount");
-        }
-        return new UserBook(
-                bookObject.getJSONObject("volumeInfo").getString("title"),
-                bookObject.getJSONObject("volumeInfo").getJSONArray("authors").getString(0),
-                isbn,
-                Uri.parse(bookObject.getJSONObject("volumeInfo").getJSONObject("imageLinks").getString("thumbnail").replace("&edge=curl","")),
-                pageCount,
-                bookObject.getString("id"),
-                bookObject.getJSONObject("volumeInfo").getString("description")
-        );
-    }
-
 }

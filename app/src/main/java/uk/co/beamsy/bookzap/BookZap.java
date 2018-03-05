@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+import uk.co.beamsy.bookzap.connections.FirestoreControl;
 import uk.co.beamsy.bookzap.model.UserBook;
 import uk.co.beamsy.bookzap.ui.BookListListener;
 import uk.co.beamsy.bookzap.ui.fragments.LibraryFragment;
@@ -232,8 +233,16 @@ public class BookZap extends AppCompatActivity implements BookListListener {
         currentUser = mUser;
     }
 
+    public void showLoadingCircle() {
+        this.loadingBar.setVisibility(View.VISIBLE);
+    }
+
+    public void hideLoadingCircle() {
+        loadingBar.setVisibility(View.GONE);
+    }
+
     public void postLogin() {
-        loadingBar.setVisibility(View.VISIBLE);
+        showLoadingCircle();
         fs = FirestoreControl.getInstance(currentUser);
         changeFragment(libraryFragment, "library");
         isLoggedIn = true;
@@ -256,7 +265,7 @@ public class BookZap extends AppCompatActivity implements BookListListener {
     public void onBookListFetch(List<UserBook> userBooks) {
         setBookList(userBooks);
         libraryFragment.setBookList(userBooks);
-        loadingBar.setVisibility(View.GONE);
+        hideLoadingCircle();
     }
 }
 

@@ -1,4 +1,4 @@
-package uk.co.beamsy.bookzap;
+package uk.co.beamsy.bookzap.connections;
 
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;

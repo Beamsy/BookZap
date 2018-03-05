@@ -13,6 +13,7 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
@@ -23,14 +24,16 @@ import java.io.IOException;
 
 import uk.co.beamsy.bookzap.BookZap;
 import uk.co.beamsy.bookzap.R;
+import uk.co.beamsy.bookzap.connections.GoogleBooksConnection;
+import uk.co.beamsy.bookzap.model.UserBook;
 
 
-
-public class ScannerFragment extends Fragment implements Detector.Processor<Barcode> {
+public class ScannerFragment extends Fragment implements Detector.Processor<Barcode>, GoogleBooksConnection.SingleSearchResultListener {
     private SurfaceView cameraView;
     private TextView barcodeInfo;
     private static ScannerFragment fragment;
     private CameraSource cameraSource;
+    private boolean detected = false;
 
     public ScannerFragment() {
 
@@ -51,7 +54,7 @@ public class ScannerFragment extends Fragment implements Detector.Processor<Barc
         mainActivity.changeDrawerBack(true);
         cameraView = rootView.findViewById(R.id.camera_view);
         barcodeInfo = rootView.findViewById(R.id.barcode_info);
-
+        detected = false;
 
         BarcodeDetector barcodeDetector = new BarcodeDetector.Builder(rootView.getContext())
                 //.setBarcodeFormats(Barcode.ISBN)
@@ -105,13 +108,35 @@ public class ScannerFragment extends Fragment implements Detector.Processor<Barc
 
     @Override
     public void receiveDetections(Detector.Detections<Barcode> detections) {
-        if ( detections.getDetectedItems().size() > 0) {
+        if ( detections.getDetectedItems().size() > 0 && !detected) {
             Log.d("Barcode: ", "barcode detected!");
+            SparseArray<Barcode> detectedItems = detections.getDetectedItems();
+            int key = detectedItems.keyAt(0);
+            Barcode barcode = detectedItems.get(key);
+            if (barcode.valueFormat != Barcode.ISBN) return;
+            String isbn = barcode.displayValue;
+            GoogleBooksConnection.searchSingle(isbn, getContext(), this);
+            fragment.getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    ((BookZap)getActivity()).showLoadingCircle();
+                }
+            });
+            detected = true;
         }
-        SparseArray<Barcode> detectedItems = detections.getDetectedItems();
-        for (int i = 0; i < detectedItems.size() ; i++) {
-            int key = detectedItems.keyAt(i);
-            Log.d("Barcode: ", detections.getDetectedItems().get(key).displayValue);
+    }
+
+    @SuppressLint("MissingPermission")
+    @Override
+    public void onSingleSearchResult(UserBook userBook) {
+        ((BookZap)getActivity()).hideLoadingCircle();
+        if (userBook == null) {
+            detected = false;
+            Toast.makeText(getContext(), "Book not found" ,Toast.LENGTH_SHORT).show();
+            return;
         }
+        BookFragment bookFragment = BookFragment.getInstance();
+        bookFragment.setBook(userBook);
+        ((BookZap)getActivity()).changeFragment(bookFragment, "book");
     }
 }
