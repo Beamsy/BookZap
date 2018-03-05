@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import uk.co.beamsy.bookzap.BookZap;
-import uk.co.beamsy.bookzap.bookzap.R;
+import uk.co.beamsy.bookzap.R;
 import uk.co.beamsy.bookzap.model.UserBook;
 import uk.co.beamsy.bookzap.ui.BookCardAdaptor;
 import uk.co.beamsy.bookzap.ui.RecyclerViewOnTouchItemListener;

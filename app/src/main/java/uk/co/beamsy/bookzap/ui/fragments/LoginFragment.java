@@ -19,7 +19,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 
 import uk.co.beamsy.bookzap.BookZap;
-import uk.co.beamsy.bookzap.bookzap.R;
+import uk.co.beamsy.bookzap.R;
 
 
 public class LoginFragment extends Fragment {

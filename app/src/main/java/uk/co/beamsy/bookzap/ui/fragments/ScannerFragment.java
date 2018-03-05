@@ -22,7 +22,7 @@ import com.google.android.gms.vision.barcode.BarcodeDetector;
 import java.io.IOException;
 
 import uk.co.beamsy.bookzap.BookZap;
-import uk.co.beamsy.bookzap.bookzap.R;
+import uk.co.beamsy.bookzap.R;
 
 
 

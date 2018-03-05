@@ -13,7 +13,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.SeekBar;
 
-import uk.co.beamsy.bookzap.bookzap.R;
+import uk.co.beamsy.bookzap.R;
 
 /**
  * Created by bea17007261 on 28/02/2018.

@@ -15,7 +15,7 @@ import com.bumptech.glide.request.RequestOptions;
 
 import java.util.List;
 
-import uk.co.beamsy.bookzap.bookzap.R;
+import uk.co.beamsy.bookzap.R;
 import uk.co.beamsy.bookzap.model.UserBook;
 
 /**

@@ -22,7 +22,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import uk.co.beamsy.bookzap.BookZap;
 import uk.co.beamsy.bookzap.FirestoreControl;
-import uk.co.beamsy.bookzap.bookzap.R;
+import uk.co.beamsy.bookzap.R;
 import uk.co.beamsy.bookzap.model.UserBook;
 import uk.co.beamsy.bookzap.ui.UpdateProgressDialog;
 
