@@ -30,15 +30,8 @@ public class Book {
         this.description = description;
     }
 
-    private Book(String title, String author, double ISBN, String coverUriString, long pageCount,
-                 String googleId, String description) {
-        this.title = title;
-        this.author = author;
-        this.ISBN = ISBN;
-        this.coverUriString = coverUriString;
-        this.pageCount = pageCount;
-        this.googleBooksId = googleId;
-        this.description = description;
+    public Book getBook() {
+        return this;
     }
 
     public void setCoverUri(String coverUri) {

@@ -7,7 +7,7 @@ import java.util.Date;
 
 public class UserBook extends Book {
     private boolean isRead = false, isFavourite = false, inLibrary = false;
-    private long readTo;
+    private long readTo = 0;
     private Date lastRead;
 
     public UserBook() {
