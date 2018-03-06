@@ -29,7 +29,8 @@ import uk.co.beamsy.bookzap.ui.BookCardAdaptor;
 import uk.co.beamsy.bookzap.ui.BookListListener;
 import uk.co.beamsy.bookzap.ui.RecyclerViewOnTouchItemListener;
 
-public class LibraryFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, BookListListener {
+public class LibraryFragment extends Fragment implements
+        SwipeRefreshLayout.OnRefreshListener, BookListListener {
 
     private static LibraryFragment libraryFragment;
     private BookCardAdaptor bookAdaptor;

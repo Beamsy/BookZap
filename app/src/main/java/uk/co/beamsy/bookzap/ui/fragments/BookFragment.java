@@ -43,7 +43,6 @@ public class BookFragment extends Fragment implements UpdateProgressDialog.Updat
                 "test", "TODO");
 
     private Toolbar bookBar;
-
     private static BookFragment bookFragment;
     private TextView progressText;
     private ProgressBar progressRead;
@@ -180,7 +179,8 @@ public class BookFragment extends Fragment implements UpdateProgressDialog.Updat
         this.book = book;
     }
 
-    public void addToLibrary(){
+
+    private void addToLibrary(){
         try {
             FirestoreControl.getInstance(FirebaseAuth.getInstance().getCurrentUser())
                     .addBookToLibrary(book, this);
