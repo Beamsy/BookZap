@@ -65,7 +65,8 @@ public class ScannerFragment extends Fragment implements Detector.Processor<Barc
                 .Builder(rootView.getContext(), barcodeDetector)
                 .setFacing(CameraSource.CAMERA_FACING_BACK)
                 .setAutoFocusEnabled(true)
-                .setRequestedPreviewSize(1600, 1600)
+                .setRequestedPreviewSize(1000, 1000)
+                .setRequestedFps(20.0f)
                 .build();
 
         cameraView.getHolder().addCallback(new SurfaceHolder.Callback() {

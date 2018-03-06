@@ -1,6 +1,7 @@
 package uk.co.beamsy.bookzap.ui.fragments;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
@@ -14,11 +15,17 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+
+import java.util.List;
 
 import uk.co.beamsy.bookzap.BookZap;
 import uk.co.beamsy.bookzap.connections.FirestoreControl;
@@ -27,9 +34,11 @@ import uk.co.beamsy.bookzap.model.UserBook;
 import uk.co.beamsy.bookzap.ui.UpdateProgressDialog;
 
 
-public class BookFragment extends Fragment implements UpdateProgressDialog.UpdateProgressListener {
+public class BookFragment extends Fragment implements UpdateProgressDialog.UpdateProgressListener,
+        OnCompleteListener<Void>
+{
     private UserBook book = new UserBook("Blank", "No_one", 0,
-            Uri.parse("android.resource://uk.co.beamsy.bookzap.bookzap/"
+            Uri.parse("android.resource://uk.co.beamsy.bookzap/"
                     + R.mipmap.ic_launcher), 1,
                 "test", "TODO");
 
@@ -52,20 +61,27 @@ public class BookFragment extends Fragment implements UpdateProgressDialog.Updat
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflator, ViewGroup container, Bundle savedInstanceState) {
-        final View rootView = inflator.inflate(R.layout.fragment_book, container, false);
+    public View onCreateView(LayoutInflater inflator,
+                             ViewGroup container,
+                             Bundle savedInstanceState) {
+        final View rootView = inflator.inflate(R.layout.fragment_book,
+                container,
+                false);
         BookZap mainActivity = (BookZap) getActivity();
         bookBar = rootView.findViewById(R.id.book_toolbar);
         bookBar.inflateMenu(R.menu.book_toolbar_menu);
 
         if (!book.isInLibrary()) {
             bookBar.getMenu().removeItem(R.id.menu_favourite);
+            bookBar.getMenu().removeItem(R.id.menu_delete);
         } else {
             bookBar.getMenu().removeItem(R.id.menu_add);
             if (book.isFavourite()) {
-                bookBar.getMenu().findItem(R.id.menu_favourite).setIcon(R.drawable.ic_favorite_white_36dp);
+                bookBar.getMenu().findItem(R.id.menu_favourite)
+                        .setIcon(R.drawable.ic_favorite_white_36dp);
             } else {
-                bookBar.getMenu().findItem(R.id.menu_favourite).setIcon(R.drawable.ic_favorite_border_white_36dp);
+                bookBar.getMenu().findItem(R.id.menu_favourite)
+                        .setIcon(R.drawable.ic_favorite_border_white_36dp);
             }
         }
 
@@ -81,6 +97,10 @@ public class BookFragment extends Fragment implements UpdateProgressDialog.Updat
                         return true;
                     case R.id.menu_add:
                         addToLibrary();
+                        return true;
+                    case R.id.menu_delete:
+                        removeBook();
+                        return true;
                     default:
                         return false;
                 }
@@ -117,7 +137,8 @@ public class BookFragment extends Fragment implements UpdateProgressDialog.Updat
     }
 
     private void showProgressDialog() {
-        UpdateProgressDialog dialog = UpdateProgressDialog.getInstance(book.getReadTo(), book.getPageCount(), this);
+        UpdateProgressDialog dialog = UpdateProgressDialog.getInstance(book.getReadTo(),
+                book.getPageCount(), this);
         dialog.show(getFragmentManager(), "UpdateProgressDialogFragment");
     }
 
@@ -138,6 +159,12 @@ public class BookFragment extends Fragment implements UpdateProgressDialog.Updat
         progressText.setText(progressTextString);
     }
 
+    private void removeBook() {
+        BookZap mainActivity = (BookZap) getActivity();
+        FirestoreControl.getInstance(FirebaseAuth.getInstance().getCurrentUser())
+                .removeUserBookData(book, mainActivity);
+    }
+
     private void toggleFavourite(){
         book.setFavourite(!book.isFavourite());
         FirestoreControl.getInstance(FirebaseAuth.getInstance().getCurrentUser()).modifyUserBookData(book);
@@ -155,9 +182,27 @@ public class BookFragment extends Fragment implements UpdateProgressDialog.Updat
 
     public void addToLibrary(){
         try {
-            FirestoreControl.getInstance(FirebaseAuth.getInstance().getCurrentUser()).addBookToLibrary(book);
+            FirestoreControl.getInstance(FirebaseAuth.getInstance().getCurrentUser())
+                    .addBookToLibrary(book, this);
         } catch (FirebaseFirestoreException e) {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public void onComplete(Task<Void> task) {
+        if (task.isSuccessful()) {
+            BookZap mainActivity = (BookZap) getActivity();
+            List<UserBook> books = mainActivity.getBookList();
+            books.add(book);
+            mainActivity.setBookList(books);
+            mainActivity.getFragmentManager()
+                    .popBackStack("library", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            mainActivity.changeFragment(LibraryFragment.getInstance(), "library");
+        } else {
+            Toast.makeText(getContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
 }

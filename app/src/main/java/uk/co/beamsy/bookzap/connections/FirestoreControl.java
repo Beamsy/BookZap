@@ -1,5 +1,6 @@
 package uk.co.beamsy.bookzap.connections;
 
+import android.app.FragmentManager;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.util.ArrayMap;
@@ -25,9 +26,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
+import uk.co.beamsy.bookzap.BookZap;
 import uk.co.beamsy.bookzap.model.Book;
 import uk.co.beamsy.bookzap.model.UserBook;
 import uk.co.beamsy.bookzap.ui.BookListListener;
+import uk.co.beamsy.bookzap.ui.fragments.LibraryFragment;
 
 /**
  * Created by bea17007261 on 23/01/2018.
@@ -102,27 +105,22 @@ public class FirestoreControl {
                             }
                         }
                     });
-                    return;
                 }
             }
         });
     }
 
-    public void addBookToLibrary(UserBook userBook) throws FirebaseFirestoreException {
+    public void addBookToLibrary(UserBook userBook, OnCompleteListener<Void> listener) throws FirebaseFirestoreException {
         isBookPresent(userBook);
         HashMap<String, Object> hM = new HashMap<String, Object>();
         hM.put("ISBN", userBook.getISBNAsString());
         hM.put(USER_BOOK_DATA_READ, userBook.isRead());
         hM.put(USER_BOOK_DATA_FAVOURITE, userBook.isFavourite());
         hM.put(USER_BOOK_DATA_PROGRESS, userBook.getReadTo());
+        hM.put("book_ref", booksRef.document(userBook.getISBNAsString()));
         userBook.setLastReadToNow();
         hM.put(USER_BOOK_DATA_LAST_READ, userBook.getLastRead());
-        userBooksRef.document(userBook.getISBNAsString()).set(hM).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.d("addB2L", e.getMessage());
-            }
-        });
+        userBooksRef.document(userBook.getISBNAsString()).set(hM).addOnCompleteListener(listener);
     }
 
     public void getBookPage(BookListListener bookListListener, UserBook lastBook, int sortMethod) {
@@ -253,14 +251,28 @@ public class FirestoreControl {
 
     }
 
-    public void modifyUserBookData(UserBook uBook) {
+    public void modifyUserBookData(UserBook userBook) {
         ArrayMap<String, Object> aM = new ArrayMap<>();
-        aM.put(USER_BOOK_DATA_FAVOURITE, uBook.isFavourite());
-        aM.put(USER_BOOK_DATA_PROGRESS, uBook.getReadTo());
-        aM.put(USER_BOOK_DATA_READ, uBook.isRead());
-        aM.put("ISBN", uBook.getISBNAsString());
-        aM.put(USER_BOOK_DATA_LAST_READ, uBook.getLastRead());
-        aM.put("book_ref", booksRef.document(uBook.getISBNAsString()));
-        userBooksRef.document(uBook.getISBNAsString()).set(aM);
+        aM.put(USER_BOOK_DATA_FAVOURITE, userBook.isFavourite());
+        aM.put(USER_BOOK_DATA_PROGRESS, userBook.getReadTo());
+        aM.put(USER_BOOK_DATA_READ, userBook.isRead());
+        aM.put("ISBN", userBook.getISBNAsString());
+        aM.put(USER_BOOK_DATA_LAST_READ, userBook.getLastRead());
+        aM.put("book_ref", booksRef.document(userBook.getISBNAsString()));
+        userBooksRef.document(userBook.getISBNAsString()).set(aM);
+    }
+
+    public void removeUserBookData (final UserBook userBook, final BookZap mainActivity) {
+        userBooksRef.document(userBook.getISBNAsString()).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                List<UserBook> books = mainActivity.getBookList();
+                books.remove(userBook);
+                mainActivity.onBookListFetch(books);
+                mainActivity.getFragmentManager()
+                        .popBackStack("library", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                mainActivity.changeFragment(LibraryFragment.getInstance(), "library");
+            }
+        });
     }
 }

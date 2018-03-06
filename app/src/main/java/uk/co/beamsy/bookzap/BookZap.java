@@ -194,11 +194,11 @@ public class BookZap extends AppCompatActivity implements BookListListener {
 
     public void changeFragment(Fragment fragment, String tag) {
         FragmentManager fragmentManager = getFragmentManager();
-        if(!tag.equals("library")) {
-            fragmentManager.beginTransaction().replace(R.id.inner_frame, fragment, tag).addToBackStack(null).commit();
-        } else {
-            fragmentManager.beginTransaction().replace(R.id.inner_frame, fragment, tag).commit();
-        }
+        //if(!tag.equals("library")) {
+            fragmentManager.beginTransaction().replace(R.id.inner_frame, fragment, tag).addToBackStack(tag).commit();
+        //} else {
+        //    fragmentManager.beginTransaction().replace(R.id.inner_frame, fragment, tag).commit();
+        //}
     }
 
     public void hideHome() {
@@ -259,6 +259,7 @@ public class BookZap extends AppCompatActivity implements BookListListener {
 
     public void setBookList(List<UserBook> bookList) {
         this.bookList = bookList;
+        libraryFragment.setBookList(bookList);
     }
 
     @Override
