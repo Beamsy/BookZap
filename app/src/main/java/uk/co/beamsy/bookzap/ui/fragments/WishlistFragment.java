@@ -72,9 +72,7 @@ public class WishlistFragment
                     @Override
                     public void onTap(View view, int adaptorPosition) {
                         UserBook book = bookList.get(adaptorPosition);
-                        BookFragment fragment = BookFragment.getInstance();
-                        fragment.setBook(book).setWishList();
-                        mainActivity.changeFragment(fragment, "book");
+                        mainActivity.changeFragment(BookFragment.getInstance().setBook(book), "book");
                     }
 
                     @Override

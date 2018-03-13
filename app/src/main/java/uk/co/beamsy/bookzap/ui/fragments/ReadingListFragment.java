@@ -73,9 +73,7 @@ public class ReadingListFragment
                     @Override
                     public void onTap(View view, int adaptorPosition) {
                         UserBook book = bookList.get(adaptorPosition);
-                        BookFragment fragment = BookFragment.getInstance();
-                        fragment.setBook(book);
-                        mainActivity.changeFragment(fragment, "book");
+                        mainActivity.changeFragment(BookFragment.getInstance().setBook(book), "book");
                     }
 
                     @Override
@@ -107,7 +105,8 @@ public class ReadingListFragment
     public void refresh() {
         swipeRefreshLayout.setRefreshing(true);
         FirestoreControl.getInstance(FirebaseAuth.getInstance().getCurrentUser())
-                .getBookPage(this, bookList.get(bookList.size()-1), FirestoreControl.SORT_TYPE_ISBN);
+                .getBookPage(this,
+                        bookList.get(bookList.size()-1), FirestoreControl.SORT_TYPE_ISBN);
 
     }
 

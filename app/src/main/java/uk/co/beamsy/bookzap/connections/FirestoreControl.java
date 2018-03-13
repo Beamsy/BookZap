@@ -247,10 +247,6 @@ public class FirestoreControl {
         });
     }
 
-    public void modifyBook(){
-
-    }
-
     public void modifyUserBookData(UserBook userBook) {
         ArrayMap<String, Object> aM = new ArrayMap<>();
         aM.put(USER_BOOK_DATA_FAVOURITE, userBook.isFavourite());

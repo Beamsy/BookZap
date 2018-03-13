@@ -139,5 +139,4 @@ public class GoogleBooksConnection {
                 bookObject.getJSONObject("volumeInfo").getString("description")
         );
     }
-
 }

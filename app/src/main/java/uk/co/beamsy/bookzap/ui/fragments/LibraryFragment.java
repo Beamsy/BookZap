@@ -122,9 +122,7 @@ public class LibraryFragment extends Fragment implements
             @Override
             public void onTap(View view, int adaptorPosition) {
                 UserBook book = bookList.get(adaptorPosition);
-                BookFragment fragment = BookFragment.getInstance();
-                fragment.setBook(book);
-                mainActivity.changeFragment(fragment, "book");
+                mainActivity.changeFragment(BookFragment.getInstance().setBook(book), "book");
             }
 
             @Override

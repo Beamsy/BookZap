@@ -27,7 +27,6 @@ public class BookCardAdaptor extends RecyclerView.Adapter<BookCardAdaptor.Recycl
     private List<UserBook> bookList;
     private boolean isLibrary;
 
-
     public class RecyclerCardViewHolder extends RecyclerView.ViewHolder{
         public TextView bookTitle, authorName, progressText, isRead;
         public ImageView bookCover;
@@ -44,8 +43,6 @@ public class BookCardAdaptor extends RecyclerView.Adapter<BookCardAdaptor.Recycl
             this.progressLayout = vi.findViewById(R.id.progress_layout);
         }
     }
-
-
 
     @Override
     public RecyclerCardViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

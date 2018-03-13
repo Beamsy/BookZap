@@ -177,7 +177,7 @@ public class BookFragment extends Fragment implements UpdateProgressDialog.Updat
 
     }
 
-    public void setBook(Book book) {
+    public BookFragment setBook(Book book) {
         if (book.getClass() == UserBook.class) {
             this.userBook = (UserBook) book;
             isWishlist = false;
@@ -185,7 +185,7 @@ public class BookFragment extends Fragment implements UpdateProgressDialog.Updat
             this.wishlistBook = (WishlistBook) book;
             isWishlist = true;
         }
-
+        return this;
     }
 
 

@@ -111,9 +111,7 @@ public class AddFragment extends Fragment implements GoogleBooksConnection.Searc
                     @Override
                     public void onTap(View view, int adaptorPosition) {
                         UserBook book = searchBookList.get(adaptorPosition);
-                        BookFragment fragment = BookFragment.getInstance();
-                        fragment.setBook(book);
-                        mainActivity.changeFragment(fragment, "book");
+                        mainActivity.changeFragment(BookFragment.getInstance().setBook(book), "book");
                     }
 
                     @Override
