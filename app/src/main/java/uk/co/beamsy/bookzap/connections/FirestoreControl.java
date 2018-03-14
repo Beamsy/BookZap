@@ -7,7 +7,6 @@ import android.util.ArrayMap;
 import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
@@ -26,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-import uk.co.beamsy.bookzap.BookZap;
+import uk.co.beamsy.bookzap.BookZapActivity;
 import uk.co.beamsy.bookzap.model.Book;
 import uk.co.beamsy.bookzap.model.UserBook;
 import uk.co.beamsy.bookzap.ui.BookListListener;
@@ -258,7 +257,7 @@ public class FirestoreControl {
         userBooksRef.document(userBook.getISBNAsString()).set(aM);
     }
 
-    public void removeUserBookData (final UserBook userBook, final BookZap mainActivity) {
+    public void removeUserBookData (final UserBook userBook, final BookZapActivity mainActivity) {
         userBooksRef.document(userBook.getISBNAsString()).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {

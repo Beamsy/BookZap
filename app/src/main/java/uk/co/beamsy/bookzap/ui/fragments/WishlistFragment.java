@@ -15,7 +15,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import java.util.ArrayList;
 import java.util.List;
 
-import uk.co.beamsy.bookzap.BookZap;
+import uk.co.beamsy.bookzap.BookZapActivity;
 import uk.co.beamsy.bookzap.R;
 import uk.co.beamsy.bookzap.connections.FirestoreControl;
 import uk.co.beamsy.bookzap.model.UserBook;
@@ -63,7 +63,7 @@ public class WishlistFragment
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(bookAdaptor);
-        final BookZap mainActivity = (BookZap) getActivity();
+        final BookZapActivity mainActivity = (BookZapActivity) getActivity();
         mainActivity.changeDrawerBack(false);
         mainActivity.setTitle("Wish List");
         recyclerView.addOnItemTouchListener(new RecyclerViewOnTouchItemListener(

@@ -2,6 +2,7 @@ package uk.co.beamsy.bookzap;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -26,11 +27,10 @@ import uk.co.beamsy.bookzap.connections.FirestoreControl;
 import uk.co.beamsy.bookzap.model.UserBook;
 import uk.co.beamsy.bookzap.ui.BookListListener;
 import uk.co.beamsy.bookzap.ui.fragments.LibraryFragment;
-import uk.co.beamsy.bookzap.ui.fragments.LoginFragment;
 import uk.co.beamsy.bookzap.ui.fragments.ReadingListFragment;
 
 
-public class BookZap extends AppCompatActivity implements BookListListener {
+public class BookZapActivity extends AppCompatActivity implements BookListListener {
     private DrawerLayout drawerLayout;
     private NavigationView drawerNav;
     private ActionBarDrawerToggle drawerToggle;
@@ -41,6 +41,7 @@ public class BookZap extends AppCompatActivity implements BookListListener {
     private List<UserBook> bookList = new ArrayList<>();
     private ProgressBar loadingBar;
     private Boolean isLoggedIn;
+    public static final int REQUEST_LOGIN = 0;
 
     @Override
     public void onStart() {
@@ -82,8 +83,6 @@ public class BookZap extends AppCompatActivity implements BookListListener {
             public void onClick(View v) {
                 auth.signOut();
                 drawerLayout.closeDrawers();
-                LoginFragment loginFragment = LoginFragment.getInstance();
-                getFragmentManager().beginTransaction().replace(R.id.inner_frame, loginFragment).commit();
             }
         });
 
@@ -110,10 +109,9 @@ public class BookZap extends AppCompatActivity implements BookListListener {
             fs = FirestoreControl.getInstance(currentUser);
             //fs.getBookPage(libraryFragment);
         } else {
-            //Login fragment is created
+            //Switch to LoginActivity
             isLoggedIn = false;
-            LoginFragment loginFragment = LoginFragment.getInstance();
-            getFragmentManager().beginTransaction().replace(R.id.inner_frame, loginFragment).commit();
+            switchToLoginActivity();
         }
         drawerToggle.setToolbarNavigationClickListener(new View.OnClickListener() {
             @Override
@@ -153,6 +151,11 @@ public class BookZap extends AppCompatActivity implements BookListListener {
             }
             fs.getBookPage(this, null, FirestoreControl.SORT_TYPE_ISBN);
         }
+    }
+
+    private void switchToLoginActivity() {
+        Intent loginIntent = new Intent(this, LoginActivity.class);
+        startActivityForResult(loginIntent, REQUEST_LOGIN);
     }
 
     @Override
@@ -242,6 +245,7 @@ public class BookZap extends AppCompatActivity implements BookListListener {
     }
 
     public void postLogin() {
+        currentUser = auth.getCurrentUser();
         showLoadingCircle();
         fs = FirestoreControl.getInstance(currentUser);
         changeFragment(libraryFragment, "library");
@@ -259,14 +263,21 @@ public class BookZap extends AppCompatActivity implements BookListListener {
 
     public void setBookList(List<UserBook> bookList) {
         this.bookList = bookList;
-        libraryFragment.setBookList(bookList);
+        libraryFragment.setDataSet(bookList);
     }
 
     @Override
     public void onBookListFetch(List<UserBook> userBooks) {
         setBookList(userBooks);
-        libraryFragment.setBookList(userBooks);
+        libraryFragment.setDataSet(userBooks);
         hideLoadingCircle();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK && requestCode == REQUEST_LOGIN) {
+            postLogin();
+        }
     }
 }
 

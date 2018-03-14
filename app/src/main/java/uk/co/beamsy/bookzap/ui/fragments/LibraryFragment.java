@@ -21,7 +21,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import java.util.ArrayList;
 import java.util.List;
 
-import uk.co.beamsy.bookzap.BookZap;
+import uk.co.beamsy.bookzap.BookZapActivity;
 import uk.co.beamsy.bookzap.connections.FirestoreControl;
 import uk.co.beamsy.bookzap.R;
 import uk.co.beamsy.bookzap.model.UserBook;
@@ -29,14 +29,11 @@ import uk.co.beamsy.bookzap.ui.BookCardAdaptor;
 import uk.co.beamsy.bookzap.ui.BookListListener;
 import uk.co.beamsy.bookzap.ui.RecyclerViewOnTouchItemListener;
 
-public class LibraryFragment extends Fragment implements
-        SwipeRefreshLayout.OnRefreshListener, BookListListener {
+public class LibraryFragment extends AbstractRefreshingFragment implements
+        SwipeRefreshLayout.OnRefreshListener {
 
     private static LibraryFragment libraryFragment;
-    private BookCardAdaptor bookAdaptor;
-    private List<UserBook> bookList;
     private boolean isFabMenuOpen = false;
-    private SwipeRefreshLayout swipeRefreshLayout;
 
     public LibraryFragment(){
 
@@ -50,9 +47,8 @@ public class LibraryFragment extends Fragment implements
         return libraryFragment;
     }
 
-    private void init() {
-        bookList = new ArrayList<>();
-        bookAdaptor = new BookCardAdaptor(this.getContext(), bookList, true);
+    protected void init() {
+        super.init(R.layout.fragment_library);
     }
 
     @Override
@@ -63,19 +59,8 @@ public class LibraryFragment extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflator, ViewGroup container,
                              Bundle savedInstanceState) {
-        final View rootView = inflator.inflate(R.layout.fragment_library, container, false);
-        final BookZap mainActivity = (BookZap) getActivity();
-
-        swipeRefreshLayout = rootView.findViewById(R.id.swiperefresh_lib);
-        swipeRefreshLayout.setOnRefreshListener(this);
-
-        RecyclerView recyclerView = rootView.findViewById(R.id.library_recycler_view);
-        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this.getContext(), 1);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(bookAdaptor);
-
-
+        final View rootView = super.onCreateView(inflator, container, savedInstanceState);
+        final BookZapActivity mainActivity = (BookZapActivity) getActivity();
         FloatingActionButton addMain = rootView.findViewById(R.id.fab_main);
         addMain.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,7 +77,7 @@ public class LibraryFragment extends Fragment implements
             @Override
             public void onClick(View vi) {
                 if(isFabMenuOpen) {
-                    BookZap mainActivity = (BookZap) getActivity();
+                    BookZapActivity mainActivity = (BookZapActivity) getActivity();
                     if (ActivityCompat.checkSelfPermission(rootView.getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                         ActivityCompat.requestPermissions(
                                 getActivity(),
@@ -110,40 +95,17 @@ public class LibraryFragment extends Fragment implements
             @Override
             public void onClick(View vi) {
                 if(isFabMenuOpen) {
-                    BookZap mainActivity = (BookZap) getActivity();
+                    BookZapActivity mainActivity = (BookZapActivity) getActivity();
                     mainActivity.changeFragment(AddFragment.getInstance(), "login");
                     isFabMenuOpen = false;
                 }
             }
         });
-        recyclerView.addOnItemTouchListener(new RecyclerViewOnTouchItemListener(
-                this.getContext(), recyclerView,
-                new RecyclerViewOnTouchItemListener.OnTouchListener() {
-            @Override
-            public void onTap(View view, int adaptorPosition) {
-                UserBook book = bookList.get(adaptorPosition);
-                mainActivity.changeFragment(BookFragment.getInstance().setBook(book), "book");
-            }
-
-            @Override
-            public void onHold(View view, int adaptorPosition) {
-
-            }
-        }));
         mainActivity.changeDrawerBack(false);
         mainActivity.setTitle("Library");
-//        if (bookList.size() == 0) {
-//            refresh();
-//        }
         return rootView;
     }
 
-
-
-    public void addCard(UserBook b) {
-        bookList.add(b);
-        bookAdaptor.notifyDataSetChanged();
-    }
 
     private void showMenu(){
         isFabMenuOpen = true;
@@ -159,17 +121,8 @@ public class LibraryFragment extends Fragment implements
         containerLayout.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.fade_slide_out));
     }
 
-    public void setBookList(List<UserBook> bookList) {
-        if (this.bookList == null) {
-            this.bookList = new ArrayList<>();
-            bookAdaptor = new BookCardAdaptor(this.getContext(), this.bookList, true);
-        }
-        this.bookList.clear();
-        this.bookList.addAll(bookList);
-        bookAdaptor.notifyDataSetChanged();
-    }
-
-    public void refresh() {
+    @Override
+    public void onRefresh() {
         swipeRefreshLayout.setRefreshing(true);
         if (bookList.size() != 0) {
             FirestoreControl.getInstance(FirebaseAuth.getInstance().getCurrentUser())
@@ -181,16 +134,4 @@ public class LibraryFragment extends Fragment implements
 
     }
 
-    @Override
-    public void onBookListFetch(List<UserBook> userBooks) {
-        setBookList(userBooks);
-        BookZap mainActivity = (BookZap)getActivity();
-        mainActivity.setBookList(userBooks);
-        swipeRefreshLayout.setRefreshing(false);
-    }
-
-    @Override
-    public void onRefresh() {
-        refresh();
-    }
 }

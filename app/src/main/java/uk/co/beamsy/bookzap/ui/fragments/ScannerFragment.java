@@ -22,7 +22,7 @@ import com.google.android.gms.vision.barcode.BarcodeDetector;
 
 import java.io.IOException;
 
-import uk.co.beamsy.bookzap.BookZap;
+import uk.co.beamsy.bookzap.BookZapActivity;
 import uk.co.beamsy.bookzap.R;
 import uk.co.beamsy.bookzap.connections.GoogleBooksConnection;
 import uk.co.beamsy.bookzap.model.UserBook;
@@ -49,7 +49,7 @@ public class ScannerFragment extends Fragment implements Detector.Processor<Barc
     @Override
     public View onCreateView(LayoutInflater inflator, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflator.inflate(R.layout.fragment_scanner, container, false);
-        BookZap mainActivity = (BookZap) getActivity();
+        BookZapActivity mainActivity = (BookZapActivity) getActivity();
         mainActivity.setTitle("Scan a barcode");
         mainActivity.changeDrawerBack(true);
         cameraView = rootView.findViewById(R.id.camera_view);
@@ -120,7 +120,7 @@ public class ScannerFragment extends Fragment implements Detector.Processor<Barc
             fragment.getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    ((BookZap)getActivity()).showLoadingCircle();
+                    ((BookZapActivity)getActivity()).showLoadingCircle();
                 }
             });
             detected = true;
@@ -130,7 +130,7 @@ public class ScannerFragment extends Fragment implements Detector.Processor<Barc
     @SuppressLint("MissingPermission")
     @Override
     public void onSingleSearchResult(UserBook userBook) {
-        ((BookZap)getActivity()).hideLoadingCircle();
+        ((BookZapActivity)getActivity()).hideLoadingCircle();
         if (userBook == null) {
             detected = false;
             Toast.makeText(getContext(), "Book not found" ,Toast.LENGTH_SHORT).show();
@@ -138,6 +138,6 @@ public class ScannerFragment extends Fragment implements Detector.Processor<Barc
         }
         BookFragment bookFragment = BookFragment.getInstance();
         bookFragment.setBook(userBook);
-        ((BookZap)getActivity()).changeFragment(bookFragment, "book");
+        ((BookZapActivity)getActivity()).changeFragment(bookFragment, "book");
     }
 }

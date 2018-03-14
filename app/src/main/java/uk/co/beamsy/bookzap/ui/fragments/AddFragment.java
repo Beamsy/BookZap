@@ -19,7 +19,7 @@ import android.widget.EditText;
 import java.util.ArrayList;
 import java.util.List;
 
-import uk.co.beamsy.bookzap.BookZap;
+import uk.co.beamsy.bookzap.BookZapActivity;
 import uk.co.beamsy.bookzap.R;
 import uk.co.beamsy.bookzap.connections.GoogleBooksConnection;
 import uk.co.beamsy.bookzap.model.UserBook;
@@ -27,11 +27,9 @@ import uk.co.beamsy.bookzap.ui.BookCardAdaptor;
 import uk.co.beamsy.bookzap.ui.RecyclerViewOnTouchItemListener;
 
 
-public class AddFragment extends Fragment implements GoogleBooksConnection.SearchResultListener {
+public class AddFragment extends AbstractBookListFragment implements GoogleBooksConnection.SearchResultListener {
 
     private static AddFragment fragment;
-    private BookCardAdaptor bookAdaptor;
-    private List<UserBook> searchBookList;
     private boolean isSearched;
     private static String SEARCH_ISBN = "isbn";
     private static String SEARCH_TITLE = "intitle";
@@ -40,7 +38,7 @@ public class AddFragment extends Fragment implements GoogleBooksConnection.Searc
     private ConstraintLayout constraintLayout;
 
     public AddFragment() {
-        // Required empty public constructor
+        super();
     }
 
     public static AddFragment getInstance() {
@@ -51,9 +49,8 @@ public class AddFragment extends Fragment implements GoogleBooksConnection.Searc
         return fragment;
     }
 
-    private void init() {
-        searchBookList = new ArrayList<>();
-        bookAdaptor = new BookCardAdaptor(this.getContext(), searchBookList, false);
+    protected void init() {
+        super.init(R.layout.fragment_add);
         isSearched = false;
     }
 
@@ -65,13 +62,8 @@ public class AddFragment extends Fragment implements GoogleBooksConnection.Searc
     @Override
     public View onCreateView(LayoutInflater inflator, ViewGroup container,
                              Bundle savedInstanceState) {
-        final View rootView = inflator.inflate(R.layout.fragment_add, container, false);
+        final View rootView = super.onCreateView(inflator, container, savedInstanceState);
         constraintLayout = rootView.findViewById(R.id.search_constraint_layout);
-        RecyclerView recyclerView = rootView.findViewById(R.id.search_recycler_view);
-        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this.getContext(), 1);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(bookAdaptor);
         titleText = rootView.findViewById(R.id.add_title_edit);
         authorText = rootView.findViewById(R.id.add_author_edit);
         isbnText = rootView.findViewById(R.id.add_isbn_edit);
@@ -90,35 +82,19 @@ public class AddFragment extends Fragment implements GoogleBooksConnection.Searc
                     toggleView();
                     InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
                     try {
-                        imm.hideSoftInputFromWindow(constraintLayout.getWindowToken(), 0);
+                        imm.hideSoftInputFromWindow(rootView.getWindowToken(), 0);
                     } catch (NullPointerException e) {
                         Log.e("Add: ", "keyboard hide failed");
                     }
                 } else {
-                    searchBookList.clear();
+                    bookList.clear();
                     bookAdaptor.notifyDataSetChanged();
                     isSearched = false;
                     toggleView();
                 }
             }
         });
-        final BookZap mainActivity = (BookZap) getActivity();
-        mainActivity.setTitle("Add a book");
-        mainActivity.changeDrawerBack(true);
-        recyclerView.addOnItemTouchListener(new RecyclerViewOnTouchItemListener(
-                this.getContext(), recyclerView,
-                new RecyclerViewOnTouchItemListener.OnTouchListener() {
-                    @Override
-                    public void onTap(View view, int adaptorPosition) {
-                        UserBook book = searchBookList.get(adaptorPosition);
-                        mainActivity.changeFragment(BookFragment.getInstance().setBook(book), "book");
-                    }
-
-                    @Override
-                    public void onHold(View view, int adaptorPosition) {
-
-                    }
-                }));
+        ((BookZapActivity) getActivity()).setTitle("Add a book");
         return rootView;
     }
 
@@ -132,8 +108,6 @@ public class AddFragment extends Fragment implements GoogleBooksConnection.Searc
 
     @Override
     public void onSearchResult(ArrayList<UserBook> userBooks) {
-        searchBookList.clear();
-        searchBookList.addAll(userBooks);
-        bookAdaptor.notifyDataSetChanged();
+        super.setDataSet(userBooks);
     }
 }

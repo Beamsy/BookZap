@@ -25,7 +25,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.util.List;
 
-import uk.co.beamsy.bookzap.BookZap;
+import uk.co.beamsy.bookzap.BookZapActivity;
 import uk.co.beamsy.bookzap.connections.FirestoreControl;
 import uk.co.beamsy.bookzap.R;
 import uk.co.beamsy.bookzap.model.Book;
@@ -65,7 +65,7 @@ public class BookFragment extends Fragment implements UpdateProgressDialog.Updat
         final View rootView = inflator.inflate(R.layout.fragment_book,
                 container,
                 false);
-        BookZap mainActivity = (BookZap) getActivity();
+        BookZapActivity mainActivity = (BookZapActivity) getActivity();
         bookBar = rootView.findViewById(R.id.book_toolbar);
         bookBar.inflateMenu(R.menu.book_toolbar_menu);
 
@@ -161,7 +161,7 @@ public class BookFragment extends Fragment implements UpdateProgressDialog.Updat
     }
 
     private void removeBook() {
-        BookZap mainActivity = (BookZap) getActivity();
+        BookZapActivity mainActivity = (BookZapActivity) getActivity();
         FirestoreControl.getInstance(FirebaseAuth.getInstance().getCurrentUser())
                 .removeUserBookData(userBook, mainActivity);
     }
@@ -201,7 +201,7 @@ public class BookFragment extends Fragment implements UpdateProgressDialog.Updat
     @Override
     public void onComplete(Task<Void> task) {
         if (task.isSuccessful()) {
-            BookZap mainActivity = (BookZap) getActivity();
+            BookZapActivity mainActivity = (BookZapActivity) getActivity();
             List<UserBook> books = mainActivity.getBookList();
             books.add(userBook);
             mainActivity.setBookList(books);
