@@ -133,12 +133,19 @@ public class BookZapActivity extends AppCompatActivity implements BookListListen
                             changeFragment(libraryFragment, "library");
                             item.setChecked(true);
                         }
-
+                        break;
                     case R.id.menu_reading_list:
                         if (!item.isChecked()) {
                             changeFragment(ReadingListFragment.getInstance(), "readingList");
                             item.setChecked(true);
                         }
+                        break;
+                    case R.id.menu_wishlist:
+                        if (!item.isChecked()) {
+                            FirestoreControl.getInstance(auth.getCurrentUser()).getWishlist();
+
+                        }
+                        break;
                 }
                 drawerLayout.closeDrawers();
                 return true;

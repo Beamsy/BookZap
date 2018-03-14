@@ -30,7 +30,6 @@ import uk.co.beamsy.bookzap.connections.FirestoreControl;
 import uk.co.beamsy.bookzap.R;
 import uk.co.beamsy.bookzap.model.Book;
 import uk.co.beamsy.bookzap.model.UserBook;
-import uk.co.beamsy.bookzap.model.WishlistBook;
 import uk.co.beamsy.bookzap.ui.UpdateProgressDialog;
 
 
@@ -38,8 +37,6 @@ public class BookFragment extends Fragment implements UpdateProgressDialog.Updat
         OnCompleteListener<Void>
 {
     private UserBook userBook = new UserBook();
-    private WishlistBook wishlistBook = new WishlistBook();
-    private boolean isWishlist;
 
     private Toolbar bookBar;
     private static BookFragment bookFragment;
@@ -69,72 +66,68 @@ public class BookFragment extends Fragment implements UpdateProgressDialog.Updat
         bookBar = rootView.findViewById(R.id.book_toolbar);
         bookBar.inflateMenu(R.menu.book_toolbar_menu);
 
-        if (!isWishlist) {
-            if (!userBook.isInLibrary()) {
-                bookBar.getMenu().removeItem(R.id.menu_favourite);
-                bookBar.getMenu().removeItem(R.id.menu_delete);
+        if (!userBook.isInLibrary()) {
+            bookBar.getMenu().removeItem(R.id.menu_favourite);
+            bookBar.getMenu().removeItem(R.id.menu_delete);
+        } else {
+            bookBar.getMenu().removeItem(R.id.menu_add);
+            if (userBook.isFavourite()) {
+                bookBar.getMenu().findItem(R.id.menu_favourite)
+                        .setIcon(R.drawable.ic_favorite_white_36dp);
             } else {
-                bookBar.getMenu().removeItem(R.id.menu_add);
-                if (userBook.isFavourite()) {
-                    bookBar.getMenu().findItem(R.id.menu_favourite)
-                            .setIcon(R.drawable.ic_favorite_white_36dp);
-                } else {
-                    bookBar.getMenu().findItem(R.id.menu_favourite)
-                            .setIcon(R.drawable.ic_favorite_border_white_36dp);
+                bookBar.getMenu().findItem(R.id.menu_favourite)
+                        .setIcon(R.drawable.ic_favorite_border_white_36dp);
+            }
+        }
+
+        bookBar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.menu_favourite:
+                        Log.d("Menu: ", "favourite");
+                        toggleFavourite();
+                        return true;
+                    case R.id.menu_add:
+                        addToLibrary();
+                        return true;
+                    case R.id.menu_delete:
+                        removeBook();
+                        return true;
+                    default:
+                        return false;
                 }
             }
+        });
+        TextView bookTitle = rootView.findViewById(R.id.book_title);
+        bookTitle.setText(userBook.getTitle());
+        TextView authorName = rootView.findViewById(R.id.author_name);
+        authorName.setText(userBook.getAuthor());
+        ImageView bookCover = rootView.findViewById(R.id.book_cover);
+        Glide
+                .with(container.getContext())
+                .load(userBook.getCoverUri())
+                .apply(RequestOptions.fitCenterTransform())
+                .into(bookCover);
+        isRead = rootView.findViewById(R.id.is_read_text);
+        ConstraintLayout progressLayout = rootView.findViewById(R.id.progress_layout);
+        progressLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showProgressDialog();
+            }
+        });
+        progressText = rootView.findViewById(R.id.progress_read_text);
+        progressRead = rootView.findViewById(R.id.progress_read);
+        progressRead.setMax(((int) userBook.getPageCount()));
+        updateProgress(userBook.getReadTo());
+        mainActivity.changeDrawerBack(true);
+        mainActivity.setTitle(userBook.getTitle());
+        TextView description = rootView.findViewById(R.id.book_description);
+        description.setMovementMethod(new ScrollingMovementMethod());
+        description.setText(userBook.getDescription());
+        return rootView;
 
-
-            bookBar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    switch (item.getItemId()) {
-                        case R.id.menu_favourite:
-                            Log.d("Menu: ", "favourite");
-                            toggleFavourite();
-                            return true;
-                        case R.id.menu_add:
-                            addToLibrary();
-                            return true;
-                        case R.id.menu_delete:
-                            removeBook();
-                            return true;
-                        default:
-                            return false;
-                    }
-                }
-            });
-            TextView bookTitle = rootView.findViewById(R.id.book_title);
-            bookTitle.setText(userBook.getTitle());
-            TextView authorName = rootView.findViewById(R.id.author_name);
-            authorName.setText(userBook.getAuthor());
-            ImageView bookCover = rootView.findViewById(R.id.book_cover);
-            Glide
-                    .with(container.getContext())
-                    .load(userBook.getCoverUri())
-                    .apply(RequestOptions.fitCenterTransform())
-                    .into(bookCover);
-            isRead = rootView.findViewById(R.id.is_read_text);
-            ConstraintLayout progressLayout = rootView.findViewById(R.id.progress_layout);
-            progressLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    showProgressDialog();
-                }
-            });
-            progressText = rootView.findViewById(R.id.progress_read_text);
-            progressRead = rootView.findViewById(R.id.progress_read);
-            progressRead.setMax(((int) userBook.getPageCount()));
-            updateProgress(userBook.getReadTo());
-            mainActivity.changeDrawerBack(true);
-            mainActivity.setTitle(userBook.getTitle());
-            TextView description = rootView.findViewById(R.id.book_description);
-            description.setMovementMethod(new ScrollingMovementMethod());
-            description.setText(userBook.getDescription());
-            return rootView;
-        } else {
-            return rootView;
-        }
     }
 
     private void showProgressDialog() {
@@ -178,13 +171,7 @@ public class BookFragment extends Fragment implements UpdateProgressDialog.Updat
     }
 
     public BookFragment setBook(Book book) {
-        if (book.getClass() == UserBook.class) {
-            this.userBook = (UserBook) book;
-            isWishlist = false;
-        } else if (book.getClass() == WishlistBook.class) {
-            this.wishlistBook = (WishlistBook) book;
-            isWishlist = true;
-        }
+        this.userBook = (UserBook) book;
         return this;
     }
 

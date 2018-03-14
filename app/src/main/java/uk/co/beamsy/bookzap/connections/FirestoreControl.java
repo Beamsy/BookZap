@@ -257,6 +257,25 @@ public class FirestoreControl {
         userBooksRef.document(userBook.getISBNAsString()).set(aM);
     }
 
+    public void getWishlist () {
+        userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                ArrayList<DocumentReference> references =
+                        (ArrayList<DocumentReference>)documentSnapshot.get("wishlist");
+                final List<Book> list = new ArrayList<>();
+                for (DocumentReference ref: references) {
+                    ref.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            list.add(documentSnapshot.toObject(Book.class));
+                        }
+                    });
+                }
+            }
+        });
+    }
+
     public void removeUserBookData (final UserBook userBook, final BookZapActivity mainActivity) {
         userBooksRef.document(userBook.getISBNAsString()).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
