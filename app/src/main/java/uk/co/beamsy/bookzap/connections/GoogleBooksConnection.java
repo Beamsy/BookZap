@@ -36,6 +36,11 @@ public class GoogleBooksConnection {
         void onSingleSearchResult(UserBook userBook);
     }
 
+    //Private constructor so that this class is never created as an object.
+    private GoogleBooksConnection() {
+
+    }
+
     public static void searchSingle(String ISBN, Context context, final SingleSearchResultListener listener) {
         String Url = BASE_URL + "isbn:" + ISBN;
         RequestQueue queue = Volley.newRequestQueue(context);

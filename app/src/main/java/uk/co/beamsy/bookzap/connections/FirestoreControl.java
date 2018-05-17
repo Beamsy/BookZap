@@ -36,6 +36,8 @@ import uk.co.beamsy.bookzap.ui.fragments.LibraryFragment;
  * Created by bea17007261 on 23/01/2018.
  */
 
+
+// Class to control Firestore communication
 public class FirestoreControl {
 
     private CollectionReference userBooksRef;
@@ -156,6 +158,7 @@ public class FirestoreControl {
         }
     }
 
+    // Async task to run
     private class GetBookPageTask extends  AsyncTask<GetBookPageArguments, Void, List<UserBook>> {
 
         private BookListListener listener;

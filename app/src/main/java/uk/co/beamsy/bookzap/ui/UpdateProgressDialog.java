@@ -116,10 +116,9 @@ public class UpdateProgressDialog extends DialogFragment {
         }
 
         private boolean isInRange (int min, int max, int input) {
-            // Is min smaller than max
-            // If so is input greater than oet min and less than oet max
-            // Else check inverse for negative values.
-            return min < max ? min <= input && max >= input : min >= input && max <= input;
+            // Check if the input is within the range using ternary operator
+            // This allows the check to function
+            return (min < max) ? ((min <= input) && (max >= input)) : ((min >= input) && (max <= input));
         }
     }
 }

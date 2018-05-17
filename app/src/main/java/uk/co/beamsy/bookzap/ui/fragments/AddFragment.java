@@ -44,6 +44,7 @@ public class AddFragment extends Fragment implements GoogleBooksConnection.Searc
         // Required empty public constructor
     }
 
+    // Singleton getInstance
     public static AddFragment getInstance() {
         if(fragment == null) {
             fragment = new AddFragment();
@@ -63,9 +64,12 @@ public class AddFragment extends Fragment implements GoogleBooksConnection.Searc
         super.onCreate(savedInstanceState);
     }
 
+    // Runs when fragment is rendered
     @Override
     public View onCreateView(LayoutInflater inflator, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        // Assign variables to items within the layout
         final View rootView = inflator.inflate(R.layout.fragment_add, container, false);
         constraintLayout = rootView.findViewById(R.id.search_constraint_layout);
         RecyclerView recyclerView = rootView.findViewById(R.id.search_recycler_view);
@@ -77,20 +81,24 @@ public class AddFragment extends Fragment implements GoogleBooksConnection.Searc
         authorText = rootView.findViewById(R.id.add_author_edit);
         isbnText = rootView.findViewById(R.id.add_isbn_edit);
         Button searchButton = rootView.findViewById(R.id.add_search_button);
+        // Show input
         toggleView();
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!isSearched) {
+                    // Get terms within text boxes and
                     ArrayMap<String,String> searchTerms = new ArrayMap<>();
                     searchTerms.put(SEARCH_ISBN, isbnText.getText().toString());
                     searchTerms.put(SEARCH_AUTHOR, authorText.getText().toString());
                     searchTerms.put(SEARCH_TITLE, titleText.getText().toString());
+                    // Perform search
                     GoogleBooksConnection.search(searchTerms, getContext(), fragment);
                     isSearched = true;
                     toggleView();
                     InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
                     try {
+                        // Hide keyboard
                         imm.hideSoftInputFromWindow(constraintLayout.getWindowToken(), 0);
                     } catch (NullPointerException e) {
                         Log.e("Add: ", "keyboard hide failed");
@@ -106,6 +114,7 @@ public class AddFragment extends Fragment implements GoogleBooksConnection.Searc
         final BookZap mainActivity = (BookZap) getActivity();
         mainActivity.setTitle("Add a book");
         mainActivity.changeDrawerBack(true);
+        // Set touchlistener for recycler view to change to a bookfragment of the selected book
         recyclerView.addOnItemTouchListener(new RecyclerViewOnTouchItemListener(
                 this.getContext(), recyclerView,
                 new RecyclerViewOnTouchItemListener.OnTouchListener() {
@@ -125,6 +134,7 @@ public class AddFragment extends Fragment implements GoogleBooksConnection.Searc
         return rootView;
     }
 
+    // Shows or hides input fields
     private void toggleView() {
         if (isSearched) {
             constraintLayout.setVisibility(View.GONE);
@@ -133,6 +143,7 @@ public class AddFragment extends Fragment implements GoogleBooksConnection.Searc
         }
     }
 
+    // Interface to return results to.
     @Override
     public void onSearchResult(ArrayList<UserBook> userBooks) {
         searchBookList.clear();

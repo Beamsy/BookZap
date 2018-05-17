@@ -126,6 +126,7 @@ public class BookZap extends AppCompatActivity implements BookListListener {
         });
         drawerLayout.addDrawerListener(drawerToggle);
 
+        // Set up navigation drawer
         drawerNav.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem item) {
@@ -192,6 +193,7 @@ public class BookZap extends AppCompatActivity implements BookListListener {
 
     }
 
+    // Method to change fragment
     public void changeFragment(Fragment fragment, String tag) {
         FragmentManager fragmentManager = getFragmentManager();
         //if(!tag.equals("library")) {
@@ -201,11 +203,13 @@ public class BookZap extends AppCompatActivity implements BookListListener {
         //}
     }
 
+    // Method to hide the home icon in the action bar to allow the back arrow to be displayed instead
     public void hideHome() {
         drawerToggle.setDrawerIndicatorEnabled(false);
         getSupportActionBar().setHomeButtonEnabled(false);
     }
 
+    // Method to change the drawer icon to either a hamburger or back arrow depending on value passed
     public void changeDrawerBack(boolean direction) {
         //This appears to be redundant code duplication, but the order of method invocation is
         //necessary.
@@ -221,6 +225,7 @@ public class BookZap extends AppCompatActivity implements BookListListener {
         }
     }
 
+    // Getters and setters for Firebase objects
     public FirebaseAuth getAuthObject() {
         return auth;
     }
@@ -233,6 +238,7 @@ public class BookZap extends AppCompatActivity implements BookListListener {
         currentUser = mUser;
     }
 
+    // Methods to show and hide loading circle in centre of screen
     public void showLoadingCircle() {
         this.loadingBar.setVisibility(View.VISIBLE);
     }
@@ -241,6 +247,7 @@ public class BookZap extends AppCompatActivity implements BookListListener {
         loadingBar.setVisibility(View.GONE);
     }
 
+    // Method called on login
     public void postLogin() {
         showLoadingCircle();
         fs = FirestoreControl.getInstance(currentUser);
@@ -249,19 +256,23 @@ public class BookZap extends AppCompatActivity implements BookListListener {
         fs.getBookPage(this, null, FirestoreControl.SORT_TYPE_ISBN);
     }
 
+    // Method to update the data set
     public void update() {
         fs.getBookPage(libraryFragment, bookList.get(bookList.size()-1), FirestoreControl.SORT_TYPE_ISBN);
     }
 
+    // method to return the data set
     public List<UserBook> getBookList() {
         return bookList;
     }
 
+    // Method to set the data set
     public void setBookList(List<UserBook> bookList) {
         this.bookList = bookList;
         libraryFragment.setBookList(bookList);
     }
 
+    // Implementation of interface
     @Override
     public void onBookListFetch(List<UserBook> userBooks) {
         setBookList(userBooks);
